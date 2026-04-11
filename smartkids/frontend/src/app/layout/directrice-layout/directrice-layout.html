@@ -1,0 +1,35 @@
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">🎓</div>
+      <div>
+        <div class="brand-name">SmartKids</div>
+        <div class="brand-role">Directrice</div>
+      </div>
+    </div>
+
+    <nav>
+      <a routerLink="/accueil"       routerLinkActive="active">🏠 Accueil</a>
+      <a routerLink="/utilisateurs"  routerLinkActive="active">👤 Utilisateurs</a>
+      <a routerLink="/classes"       routerLinkActive="active">🏫 Classes</a>
+      <a routerLink="/enfants"       routerLinkActive="active">🧒 Enfants</a>
+      <a routerLink="/evenements"    routerLinkActive="active">📅 Événements</a>
+      <a routerLink="/notifications" routerLinkActive="active">🔔 Notifications</a>
+      <a routerLink="/creer-compte"  routerLinkActive="active">➕ Créer compte</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#">🚪 Déconnexion</a>
+    </div>
+
+  </aside>
+
+  <!-- CONTENU -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

@@ -1,0 +1,25 @@
+<div class="overlay">
+
+  <div class="modal">
+
+    <h2>Ajouter enfant</h2>
+
+    <input [(ngModel)]="enfant.nom_complet" placeholder="Nom complet">
+
+    <input type="number" [(ngModel)]="enfant.age">
+
+    <select [(ngModel)]="enfant.genre">
+      <option>Fille</option>
+      <option>Garçon</option>
+    </select>
+
+    <input type="date" [(ngModel)]="enfant.date_naissance">
+
+    <input [(ngModel)]="enfant.classe_nom" placeholder="Classe">
+
+    <button (click)="enregistrer()">Ajouter</button>
+    <button (click)="fermer()">Fermer</button>
+
+  </div>
+
+</div>

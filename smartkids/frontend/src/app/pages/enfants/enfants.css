@@ -1,0 +1,114 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+/* ── LISTE ── */
+.enfants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.enfant-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s;
+}
+
+.enfant-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+.enfant-avatar {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f0f9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enfant-info {
+  flex: 1;
+}
+
+.enfant-nom {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.enfant-details {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+.enfant-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: 1px solid #e5e7eb;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.btn-icon:hover {
+  background: #f3f4f6;
+}
+
+.btn-icon.danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: #9ca3af;
+  font-size: 15px;
+}

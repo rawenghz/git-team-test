@@ -1,0 +1,33 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Enfants</h1>
+    <p class="page-subtitle">Tous les enfants inscrits — {{ enfants.length }} enfants</p>
+  </div>
+  <button class="btn-primary" (click)="ouvrirModal()">+ Ajouter un enfant</button>
+</div>
+
+<div class="enfants-list">
+  <div class="enfant-card" *ngFor="let e of enfants">
+    <div class="enfant-avatar">{{ avatarEmoji(e.genre) }}</div>
+    <div class="enfant-info">
+      <div class="enfant-nom">{{ e.nom_complet }}</div>
+      <div class="enfant-details">{{ e.age }} ans · {{ e.genre }} · {{ e.classe_nom }}</div>
+    </div>
+    <div class="enfant-actions">
+      <button class="btn-icon" title="Voir">👁️</button>
+      <button class="btn-icon" title="Modifier" (click)="ouvrirModification(e)">✏️</button>
+      <button class="btn-icon danger" title="Supprimer" (click)="supprimerEnfant(e.id)">🗑️</button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="enfants.length === 0">
+    <p>Aucun enfant inscrit pour le moment.</p>
+  </div>
+</div>
+
+<app-enfant-modal
+  *ngIf="showModal"
+  [enfantInput]="enfantAModifier"
+  (fermerModal)="fermerModal()"
+  (sauvegarder)="ajouterEnfant($event)">
+</app-enfant-modal>
