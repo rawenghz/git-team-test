@@ -18,7 +18,6 @@ export class EnfantModalComponent implements OnInit {
   @Output() sauvegarder = new EventEmitter<EnfantCreate>();
 
   classes: Classe[] = [];
-  classeSelectionnee: Classe | null = null;
 
   enfant: EnfantCreate = {
     nom: '',
@@ -29,22 +28,32 @@ export class EnfantModalComponent implements OnInit {
     classe_id: undefined
   };
 
+  // ── Dates autorisées : enfants de 3 à 5 ans ──
+  // Un enfant de 3 ans : né il y a au moins 3 ans → dateMax = aujourd'hui - 3 ans
+  // Un enfant de 5 ans : né il y a au plus 5 ans et 364 jours → dateMin = aujourd'hui - 6 ans + 1 jour
+  get dateMin(): string {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 6);
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split('T')[0];
+  }
+
+  get dateMax(): string {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 3);
+    return d.toISOString().split('T')[0];
+  }
+
   constructor(private classeService: ClasseService) {}
 
   ngOnInit(): void {
-    // Charger la liste des classes depuis l'API
     this.classeService.getAll().subscribe({
       next: (data) => {
         this.classes = data;
-        // Si on est en mode modifier, retrouver la classe déjà assignée
-        if (this.enfantInput?.classe_id) {
-          this.classeSelectionnee = this.classes.find(c => c.id === this.enfantInput!.classe_id) ?? null;
-        }
       },
       error: () => console.error('Erreur chargement classes')
     });
 
-    // Pré-remplir le formulaire si mode modifier
     if (this.enfantInput) {
       this.enfant = {
         nom:             this.enfantInput.nom,
@@ -57,13 +66,10 @@ export class EnfantModalComponent implements OnInit {
     }
   }
 
-  // Quand l'utilisateur choisit une classe dans le select
   onClasseChange(classeId: number): void {
     this.enfant.classe_id = Number(classeId);
-    this.classeSelectionnee = this.classes.find(c => c.id === Number(classeId)) ?? null;
   }
 
-  // Retrouver le nom d'une classe par son id (pour l'affichage fiche)
   getClasseNom(classeId?: number): string {
     if (!classeId) return 'Non assignée';
     const c = this.classes.find(cl => cl.id === classeId);
@@ -92,6 +98,13 @@ export class EnfantModalComponent implements OnInit {
     if (!this.enfant.nom || !this.enfant.genre) {
       alert('Veuillez remplir le nom et le genre.');
       return;
+    }
+    // Vérification date si remplie
+    if (this.enfant.date_naissance) {
+      if (this.enfant.date_naissance < this.dateMin || this.enfant.date_naissance > this.dateMax) {
+        alert('La date de naissance doit correspondre à un enfant âgé de 3 à 5 ans.');
+        return;
+      }
     }
     this.sauvegarder.emit({ ...this.enfant });
   }
