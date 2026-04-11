@@ -6,26 +6,37 @@
   <button class="btn-primary" (click)="ouvrirAjouter()">+ Ajouter un enfant</button>
 </div>
 
-<div class="enfants-list">
+<div class="loading-box" *ngIf="loading">
+  <span>Chargement...</span>
+</div>
+
+<div class="erreur-box" *ngIf="erreur">
+  {{ erreur }}
+</div>
+
+<div class="enfants-list" *ngIf="!loading && !erreur">
+
   <div class="enfant-card" *ngFor="let e of enfants">
     <div class="enfant-avatar">{{ avatarEmoji(e.genre) }}</div>
     <div class="enfant-info">
-      <div class="enfant-nom">{{ e.nom_complet }}</div>
-      <div class="enfant-details">{{ e.age }} ans · {{ e.genre }} · {{ e.classe_nom }}</div>
+      <div class="enfant-nom">{{ e.nom }}</div>
+      <div class="enfant-details">
+        {{ e.age }} ans · {{ genreLabel(e.genre) }}
+        <span *ngIf="e.classe_id"> · Classe #{{ e.classe_id }}</span>
+      </div>
     </div>
     <div class="enfant-actions">
-      <button class="btn-icon" title="Voir la fiche"  (click)="ouvrirVoir(e)">👁️</button>
-      <button class="btn-icon" title="Modifier"       (click)="ouvrirModifier(e)">✏️</button>
+      <button class="btn-icon" title="Voir"      (click)="ouvrirVoir(e)">👁️</button>
+      <button class="btn-icon" title="Modifier"  (click)="ouvrirModifier(e)">✏️</button>
       <button class="btn-icon danger" title="Supprimer" (click)="supprimer(e.id)">🗑️</button>
     </div>
   </div>
 
   <div class="empty-state" *ngIf="enfants.length === 0">
-    <p>Aucun enfant inscrit pour le moment.</p>
+    Aucun enfant inscrit pour le moment.
   </div>
 </div>
 
-<!-- MODAL UNIQUE — mode géré depuis enfants.ts -->
 <app-enfant-modal
   *ngIf="showModal"
   [mode]="modeModal"

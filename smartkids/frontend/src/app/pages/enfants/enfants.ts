@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnfantModalComponent } from '../../components/enfant-modal/enfant-modal';
-import { Enfant } from '../../models/enfant.model';
+import { EnfantService } from '../../services/enfant.service';
+import { Enfant, EnfantCreate } from '../../models/enfant.model';
 
 @Component({
   selector: 'app-enfants',
@@ -10,20 +11,45 @@ import { Enfant } from '../../models/enfant.model';
   templateUrl: './enfants.html',
   styleUrls: ['./enfants.css']
 })
-export class EnfantsComponent {
+export class EnfantsComponent implements OnInit {
+  enfants: Enfant[] = [];
   showModal = false;
   modeModal: 'ajouter' | 'modifier' | 'voir' = 'ajouter';
   enfantSelectionne: Enfant | null = null;
+  loading = false;
+  erreur = '';
 
-  enfants: Enfant[] = [
-    { id: 1, nom_complet: 'Lina Benali',    age: 3, genre: 'Fille',  date_naissance: '15/03/2023', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: 'Allergie aux arachides' },
-    { id: 2, nom_complet: 'Adam Benali',    age: 5, genre: 'Garçon', date_naissance: '20/06/2019', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
-    { id: 3, nom_complet: 'Sara Mourad',    age: 4, genre: 'Fille',  date_naissance: '05/09/2020', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
-    { id: 4, nom_complet: 'Youssef Khaled', age: 3, genre: 'Garçon', date_naissance: '18/01/2021', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
-  ];
+  constructor(private enfantService: EnfantService) {}
+
+  ngOnInit(): void {
+    this.chargerEnfants();
+  }
+
+  chargerEnfants(): void {
+    this.loading = true;
+    this.erreur = '';
+    this.enfantService.getAll().subscribe({
+      next: (data) => {
+        this.enfants = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.erreur = 'Session expirée. Veuillez vous reconnecter.';
+        } else {
+          this.erreur = 'Erreur lors du chargement des enfants.';
+        }
+        this.loading = false;
+      }
+    });
+  }
 
   avatarEmoji(genre: string): string {
-    return genre === 'Fille' ? '👧' : '👦';
+    return genre === 'fille' ? '👧' : '👦';
+  }
+
+  genreLabel(genre: string): string {
+    return genre === 'fille' ? 'Fille' : 'Garçon';
   }
 
   ouvrirAjouter(): void {
@@ -49,20 +75,26 @@ export class EnfantsComponent {
     this.enfantSelectionne = null;
   }
 
-  sauvegarder(enfant: Enfant): void {
-    if (this.modeModal === 'modifier') {
-      const index = this.enfants.findIndex(e => e.id === enfant.id);
-      if (index !== -1) this.enfants[index] = enfant;
+  sauvegarder(data: EnfantCreate): void {
+    if (this.modeModal === 'modifier' && this.enfantSelectionne) {
+      this.enfantService.update(this.enfantSelectionne.id, data).subscribe({
+        next: () => { this.chargerEnfants(); this.fermerModal(); },
+        error: () => alert('Erreur lors de la modification.')
+      });
     } else {
-      const newId = this.enfants.length > 0 ? Math.max(...this.enfants.map(e => e.id)) + 1 : 1;
-      this.enfants.push({ ...enfant, id: newId });
+      this.enfantService.create(data).subscribe({
+        next: () => { this.chargerEnfants(); this.fermerModal(); },
+        error: () => alert('Erreur lors de la création.')
+      });
     }
-    this.fermerModal();
   }
 
   supprimer(id: number): void {
     if (confirm('Supprimer cet enfant ?')) {
-      this.enfants = this.enfants.filter(e => e.id !== id);
+      this.enfantService.delete(id).subscribe({
+        next: () => this.chargerEnfants(),
+        error: () => alert('Erreur lors de la suppression.')
+      });
     }
   }
 }
