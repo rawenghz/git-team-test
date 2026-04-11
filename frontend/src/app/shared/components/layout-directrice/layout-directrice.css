@@ -1,0 +1,30 @@
+/* Sidebar: visible on md+, hidden (off-canvas) on mobile */
+.sidebar {
+  transform: translateX(-100%);
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+
+  .main-content {
+    margin-left: 240px;
+  }
+}
+
+.sidebar--open {
+  transform: translateX(0) !important;
+  box-shadow: 0 0 24px rgba(0, 0, 0, .15);
+}
+
+/* Active nav link */
+.nav-link.active {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary) !important;
+}
+
+.nav-link:hover:not(.active) {
+  background-color: var(--bs-gray-100);
+  color: var(--bs-gray-900) !important;
+}
