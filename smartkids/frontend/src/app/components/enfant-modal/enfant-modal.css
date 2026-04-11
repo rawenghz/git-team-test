@@ -1,7 +1,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.40);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +15,7 @@
   max-width: 95vw;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
 }
 
 /* ── HEADER ── */
@@ -44,9 +44,7 @@
   transition: background 0.15s;
 }
 
-.btn-close:hover {
-  background: #f3f4f6;
-}
+.btn-close:hover { background: #f3f4f6; }
 
 /* ── BODY ── */
 .modal-body {
@@ -56,6 +54,74 @@
   gap: 16px;
 }
 
+/* ── FICHE VOIR ── */
+.fiche-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.fiche-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f0f9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
+
+.fiche-identite h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-fille  { background: #dbeafe; color: #1d4ed8; }
+.badge-garcon { background: #dcfce7; color: #16a34a; }
+
+.fiche-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fiche-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.fiche-row:last-child { border-bottom: none; }
+
+.fiche-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.fiche-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ── FORMULAIRE ── */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -80,19 +146,17 @@
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
+  background: #fff;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 80px;
-}
+.form-group textarea { resize: vertical; min-height: 80px; }
 
 .form-row {
   display: grid;
@@ -118,6 +182,4 @@
   transition: background 0.2s;
 }
 
-.btn-submit:hover {
-  background: #2563eb;
-}
+.btn-submit:hover { background: #2563eb; }

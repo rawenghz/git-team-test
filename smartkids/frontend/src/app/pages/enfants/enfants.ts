@@ -12,36 +12,45 @@ import { Enfant } from '../../models/enfant.model';
 })
 export class EnfantsComponent {
   showModal = false;
-  enfantAModifier: Enfant | null = null;
+  modeModal: 'ajouter' | 'modifier' | 'voir' = 'ajouter';
+  enfantSelectionne: Enfant | null = null;
 
   enfants: Enfant[] = [
-    { id: 1, nom_complet: 'Lina Benali',    age: 3, genre: 'Fille',  date_naissance: '2021-03-12', classe_nom: 'Les Papillons' },
-    { id: 2, nom_complet: 'Adam Benali',    age: 5, genre: 'Garçon', date_naissance: '2019-06-20', classe_nom: 'Les Papillons' },
-    { id: 3, nom_complet: 'Sara Mourad',    age: 4, genre: 'Fille',  date_naissance: '2020-09-05', classe_nom: 'Les Papillons' },
-    { id: 4, nom_complet: 'Youssef Khaled', age: 3, genre: 'Garçon', date_naissance: '2021-01-18', classe_nom: 'Les Papillons' },
+    { id: 1, nom_complet: 'Lina Benali',    age: 3, genre: 'Fille',  date_naissance: '15/03/2023', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: 'Allergie aux arachides' },
+    { id: 2, nom_complet: 'Adam Benali',    age: 5, genre: 'Garçon', date_naissance: '20/06/2019', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
+    { id: 3, nom_complet: 'Sara Mourad',    age: 4, genre: 'Fille',  date_naissance: '05/09/2020', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
+    { id: 4, nom_complet: 'Youssef Khaled', age: 3, genre: 'Garçon', date_naissance: '18/01/2021', classe_nom: 'Les Papillons (3-4 ans)', notesMedicales: '' },
   ];
 
   avatarEmoji(genre: string): string {
     return genre === 'Fille' ? '👧' : '👦';
   }
 
-  ouvrirModal(): void {
-    this.enfantAModifier = null;
+  ouvrirAjouter(): void {
+    this.enfantSelectionne = null;
+    this.modeModal = 'ajouter';
     this.showModal = true;
   }
 
-  ouvrirModification(enfant: Enfant): void {
-    this.enfantAModifier = { ...enfant };
+  ouvrirVoir(enfant: Enfant): void {
+    this.enfantSelectionne = { ...enfant };
+    this.modeModal = 'voir';
+    this.showModal = true;
+  }
+
+  ouvrirModifier(enfant: Enfant): void {
+    this.enfantSelectionne = { ...enfant };
+    this.modeModal = 'modifier';
     this.showModal = true;
   }
 
   fermerModal(): void {
     this.showModal = false;
-    this.enfantAModifier = null;
+    this.enfantSelectionne = null;
   }
 
-  ajouterEnfant(enfant: Enfant): void {
-    if (this.enfantAModifier) {
+  sauvegarder(enfant: Enfant): void {
+    if (this.modeModal === 'modifier') {
       const index = this.enfants.findIndex(e => e.id === enfant.id);
       if (index !== -1) this.enfants[index] = enfant;
     } else {
@@ -51,7 +60,7 @@ export class EnfantsComponent {
     this.fermerModal();
   }
 
-  supprimerEnfant(id: number): void {
+  supprimer(id: number): void {
     if (confirm('Supprimer cet enfant ?')) {
       this.enfants = this.enfants.filter(e => e.id !== id);
     }

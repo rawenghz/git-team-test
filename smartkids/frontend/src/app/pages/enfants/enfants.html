@@ -3,7 +3,7 @@
     <h1 class="page-title">Enfants</h1>
     <p class="page-subtitle">Tous les enfants inscrits — {{ enfants.length }} enfants</p>
   </div>
-  <button class="btn-primary" (click)="ouvrirModal()">+ Ajouter un enfant</button>
+  <button class="btn-primary" (click)="ouvrirAjouter()">+ Ajouter un enfant</button>
 </div>
 
 <div class="enfants-list">
@@ -14,9 +14,9 @@
       <div class="enfant-details">{{ e.age }} ans · {{ e.genre }} · {{ e.classe_nom }}</div>
     </div>
     <div class="enfant-actions">
-      <button class="btn-icon" title="Voir">👁️</button>
-      <button class="btn-icon" title="Modifier" (click)="ouvrirModification(e)">✏️</button>
-      <button class="btn-icon danger" title="Supprimer" (click)="supprimerEnfant(e.id)">🗑️</button>
+      <button class="btn-icon" title="Voir la fiche"  (click)="ouvrirVoir(e)">👁️</button>
+      <button class="btn-icon" title="Modifier"       (click)="ouvrirModifier(e)">✏️</button>
+      <button class="btn-icon danger" title="Supprimer" (click)="supprimer(e.id)">🗑️</button>
     </div>
   </div>
 
@@ -25,9 +25,11 @@
   </div>
 </div>
 
+<!-- MODAL UNIQUE — mode géré depuis enfants.ts -->
 <app-enfant-modal
   *ngIf="showModal"
-  [enfantInput]="enfantAModifier"
+  [mode]="modeModal"
+  [enfantInput]="enfantSelectionne"
   (fermerModal)="fermerModal()"
-  (sauvegarder)="ajouterEnfant($event)">
+  (sauvegarder)="sauvegarder($event)">
 </app-enfant-modal>

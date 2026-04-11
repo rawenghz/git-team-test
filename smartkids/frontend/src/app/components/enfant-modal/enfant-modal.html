@@ -1,25 +1,93 @@
-<div class="overlay">
+<div class="modal-overlay" (click)="fermer()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
 
-  <div class="modal">
+    <!-- HEADER -->
+    <div class="modal-header">
+      <h2>{{ titre }}</h2>
+      <button class="btn-close" (click)="fermer()">✕</button>
+    </div>
 
-    <h2>Ajouter enfant</h2>
+    <!-- ══════════════════════════════════════ -->
+    <!-- MODE VOIR : fiche enfant              -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="modal-body" *ngIf="mode === 'voir'">
+      <div class="fiche-top">
+        <div class="fiche-avatar">{{ avatarEmoji(enfant.genre) }}</div>
+        <div class="fiche-identite">
+          <h3>{{ enfant.nom_complet }}</h3>
+          <span class="badge" [class.badge-fille]="enfant.genre === 'Fille'" [class.badge-garcon]="enfant.genre === 'Garçon'">
+            {{ enfant.genre }}
+          </span>
+        </div>
+      </div>
+      <div class="fiche-details">
+        <div class="fiche-row">
+          <span class="fiche-label">Classe</span>
+          <span class="fiche-value">{{ enfant.classe_nom }}</span>
+        </div>
+        <div class="fiche-row">
+          <span class="fiche-label">Date de naissance</span>
+          <span class="fiche-value">{{ enfant.date_naissance }}</span>
+        </div>
+        <div class="fiche-row">
+          <span class="fiche-label">Âge</span>
+          <span class="fiche-value">{{ enfant.age }} ans</span>
+        </div>
+        <div class="fiche-row" *ngIf="enfant.notesMedicales">
+          <span class="fiche-label">🩺 Notes médicales</span>
+          <span class="fiche-value">{{ enfant.notesMedicales }}</span>
+        </div>
+      </div>
+    </div>
 
-    <input [(ngModel)]="enfant.nom_complet" placeholder="Nom complet">
+    <!-- ══════════════════════════════════════ -->
+    <!-- MODE AJOUTER / MODIFIER : formulaire  -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="modal-body" *ngIf="mode === 'ajouter' || mode === 'modifier'">
 
-    <input type="number" [(ngModel)]="enfant.age">
+      <div class="form-group">
+        <label>NOM COMPLET *</label>
+        <input type="text" [(ngModel)]="enfant.nom_complet" placeholder="Ex: Lina Benali" />
+      </div>
 
-    <select [(ngModel)]="enfant.genre">
-      <option>Fille</option>
-      <option>Garçon</option>
-    </select>
+      <div class="form-row">
+        <div class="form-group">
+          <label>ÂGE *</label>
+          <input type="number" [(ngModel)]="enfant.age" placeholder="3" min="0" max="18" />
+        </div>
+        <div class="form-group">
+          <label>GENRE *</label>
+          <select [(ngModel)]="enfant.genre">
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+        </div>
+      </div>
 
-    <input type="date" [(ngModel)]="enfant.date_naissance">
+      <div class="form-group">
+        <label>DATE DE NAISSANCE *</label>
+        <input type="date" [(ngModel)]="enfant.date_naissance" />
+      </div>
 
-    <input [(ngModel)]="enfant.classe_nom" placeholder="Classe">
+      <div class="form-group">
+        <label>CLASSE *</label>
+        <select [(ngModel)]="enfant.classe_nom">
+          <option value="" disabled>Sélectionner une classe</option>
+          <option *ngFor="let c of classes" [value]="c">{{ c }}</option>
+        </select>
+      </div>
 
-    <button (click)="enregistrer()">Ajouter</button>
-    <button (click)="fermer()">Fermer</button>
+      <div class="form-group">
+        <label>NOTES MÉDICALES</label>
+        <textarea [(ngModel)]="enfant.notesMedicales" rows="3" placeholder="Allergies, asthme..."></textarea>
+      </div>
+
+    </div>
+
+    <!-- FOOTER bouton uniquement en mode ajouter/modifier -->
+    <div class="modal-footer" *ngIf="mode === 'ajouter' || mode === 'modifier'">
+      <button class="btn-submit" (click)="enregistrer()">{{ btnLabel }}</button>
+    </div>
 
   </div>
-
 </div>
