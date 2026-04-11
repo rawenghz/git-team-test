@@ -1,0 +1,78 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Enfants</h1>
+    <p class="page-subtitle">Tous les enfants inscrits — {{ enfants.length }} enfants</p>
+  </div>
+  <button class="btn-primary" (click)="ouvrirAjouter()">+ Ajouter un enfant</button>
+</div>
+
+<!-- Chargement -->
+<div class="loading-box" *ngIf="loading">
+  <div class="spinner"></div>
+  <span>Chargement...</span>
+</div>
+
+<!-- Erreur -->
+<div class="erreur-box" *ngIf="erreur">{{ erreur }}</div>
+
+<!-- Liste -->
+<div class="enfants-list" *ngIf="!loading && !erreur">
+  <div class="enfant-card" *ngFor="let e of enfants">
+    <div class="enfant-avatar">{{ avatarEmoji(e.genre) }}</div>
+    <div class="enfant-info">
+      <div class="enfant-nom">{{ e.nom }}</div>
+      <div class="enfant-details">
+        {{ e.age }} ans · {{ genreLabel(e.genre) }}
+        <span *ngIf="e.classe_id"> · Classe #{{ e.classe_id }}</span>
+      </div>
+    </div>
+    <div class="enfant-actions">
+      <button class="btn-icon" title="Voir"     (click)="ouvrirVoir(e)">👁️</button>
+      <button class="btn-icon" title="Modifier" (click)="ouvrirModifier(e)">✏️</button>
+      <button class="btn-icon danger" title="Supprimer" (click)="ouvrirModalSuppression(e)">🗑️</button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="enfants.length === 0">
+    Aucun enfant inscrit pour le moment.
+  </div>
+</div>
+
+<!-- ══ MODAL AJOUTER / MODIFIER / VOIR ══ -->
+<app-enfant-modal
+  *ngIf="showModal"
+  [mode]="modeModal"
+  [enfantInput]="enfantSelectionne"
+  (fermerModal)="fermerModal()"
+  (sauvegarder)="sauvegarder($event)">
+</app-enfant-modal>
+
+<!-- ══ MODAL SUPPRESSION ══ -->
+<div class="modal-overlay" *ngIf="showModalSuppression" (click)="fermerModalSuppression()">
+  <div class="modal-box suppression-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>Supprimer l'enfant</h2>
+      <button class="btn-close" (click)="fermerModalSuppression()">✕</button>
+    </div>
+
+    <div class="suppression-body">
+      <div class="suppression-avatar">🗑️</div>
+      <p class="suppression-msg">
+        Êtes-vous sûr de vouloir supprimer
+        <strong>{{ enfantASupprimer?.nom }}</strong> ?
+      </p>
+      <p class="suppression-warning">Cette action est irréversible.</p>
+    </div>
+
+    <div class="suppression-footer">
+      <button class="btn-annuler" (click)="fermerModalSuppression()">
+        Annuler
+      </button>
+      <button class="btn-supprimer" (click)="confirmerSuppression()" [disabled]="suppressionEnCours">
+        {{ suppressionEnCours ? 'Suppression...' : 'Oui, supprimer' }}
+      </button>
+    </div>
+
+  </div>
+</div>

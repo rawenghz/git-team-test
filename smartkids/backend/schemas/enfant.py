@@ -13,7 +13,7 @@ class EnfantCreate(BaseModel):
     age: Optional[int] = None
     genre: GenreEnum
     notes_medicales: Optional[str] = None
-    parent_id: int
+    parent_id: Optional[int] = None
     classe_id: Optional[int] = None
 
 class EnfantUpdate(BaseModel):
@@ -22,6 +22,7 @@ class EnfantUpdate(BaseModel):
     age: Optional[int] = None
     genre: Optional[GenreEnum] = None
     notes_medicales: Optional[str] = None
+    parent_id: Optional[int] = None
     classe_id: Optional[int] = None
 
 class EnfantOut(BaseModel):
@@ -31,7 +32,7 @@ class EnfantOut(BaseModel):
     age: Optional[int] = None
     genre: str
     notes_medicales: Optional[str] = None
-    parent_id: int
+    parent_id: Optional[int] = None
     classe_id: Optional[int] = None
 
     class Config:

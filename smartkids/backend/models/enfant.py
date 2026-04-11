@@ -11,7 +11,7 @@ class Enfant(Base):
     age= Column(Integer)
     genre= Column(Enum("garcon", "fille"), nullable=False)
     notes_medicales= Column(Text)
-    parent_id= Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    parent_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     classe_id= Column(Integer, ForeignKey("classes.id", ondelete="SET NULL"), nullable=True)
 
 
