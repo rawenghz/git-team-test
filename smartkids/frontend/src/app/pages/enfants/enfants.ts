@@ -13,11 +13,18 @@ import { Enfant, EnfantCreate } from '../../models/enfant.model';
 })
 export class EnfantsComponent implements OnInit {
   enfants: Enfant[] = [];
+  loading = false;
+  erreur = '';
+
+  // Modal ajouter / modifier / voir
   showModal = false;
   modeModal: 'ajouter' | 'modifier' | 'voir' = 'ajouter';
   enfantSelectionne: Enfant | null = null;
-  loading = false;
-  erreur = '';
+
+  // Modal suppression
+  showModalSuppression = false;
+  enfantASupprimer: Enfant | null = null;
+  suppressionEnCours = false;
 
   constructor(private enfantService: EnfantService) {}
 
@@ -25,6 +32,7 @@ export class EnfantsComponent implements OnInit {
     this.chargerEnfants();
   }
 
+  // Chargement initial uniquement
   chargerEnfants(): void {
     this.loading = true;
     this.erreur = '';
@@ -34,11 +42,9 @@ export class EnfantsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        if (err.status === 401) {
-          this.erreur = 'Session expirée. Veuillez vous reconnecter.';
-        } else {
-          this.erreur = 'Erreur lors du chargement des enfants.';
-        }
+        this.erreur = err.status === 401
+          ? 'Session expirée. Veuillez vous reconnecter.'
+          : 'Erreur lors du chargement des enfants.';
         this.loading = false;
       }
     });
@@ -52,6 +58,7 @@ export class EnfantsComponent implements OnInit {
     return genre === 'fille' ? 'Fille' : 'Garçon';
   }
 
+  // ── OUVRIR MODALS ──
   ouvrirAjouter(): void {
     this.enfantSelectionne = null;
     this.modeModal = 'ajouter';
@@ -75,26 +82,56 @@ export class EnfantsComponent implements OnInit {
     this.enfantSelectionne = null;
   }
 
+  // ── SAUVEGARDER : mise à jour LOCALE instantanée ──
   sauvegarder(data: EnfantCreate): void {
     if (this.modeModal === 'modifier' && this.enfantSelectionne) {
-      this.enfantService.update(this.enfantSelectionne.id, data).subscribe({
-        next: () => { this.chargerEnfants(); this.fermerModal(); },
+      const id = this.enfantSelectionne.id;
+      this.enfantService.update(id, data).subscribe({
+        next: (enfantMisAJour) => {
+          // Remplacer dans la liste locale — pas de rechargement
+          const index = this.enfants.findIndex(e => e.id === id);
+          if (index !== -1) this.enfants[index] = enfantMisAJour;
+          this.fermerModal();
+        },
         error: () => alert('Erreur lors de la modification.')
       });
     } else {
       this.enfantService.create(data).subscribe({
-        next: () => { this.chargerEnfants(); this.fermerModal(); },
+        next: (nouvelEnfant) => {
+          // Ajouter à la liste locale — pas de rechargement
+          this.enfants.push(nouvelEnfant);
+          this.fermerModal();
+        },
         error: () => alert('Erreur lors de la création.')
       });
     }
   }
 
-  supprimer(id: number): void {
-    if (confirm('Supprimer cet enfant ?')) {
-      this.enfantService.delete(id).subscribe({
-        next: () => this.chargerEnfants(),
-        error: () => alert('Erreur lors de la suppression.')
-      });
-    }
+  // ── SUPPRESSION avec modal de confirmation ──
+  ouvrirModalSuppression(enfant: Enfant): void {
+    this.enfantASupprimer = enfant;
+    this.showModalSuppression = true;
+  }
+
+  fermerModalSuppression(): void {
+    this.showModalSuppression = false;
+    this.enfantASupprimer = null;
+    this.suppressionEnCours = false;
+  }
+
+  confirmerSuppression(): void {
+    if (!this.enfantASupprimer) return;
+    this.suppressionEnCours = true;
+    this.enfantService.delete(this.enfantASupprimer.id).subscribe({
+      next: () => {
+        // Supprimer de la liste locale — pas de rechargement
+        this.enfants = this.enfants.filter(e => e.id !== this.enfantASupprimer!.id);
+        this.fermerModalSuppression();
+      },
+      error: () => {
+        alert('Erreur lors de la suppression.');
+        this.suppressionEnCours = false;
+      }
+    });
   }
 }
