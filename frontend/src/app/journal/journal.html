@@ -1,0 +1,78 @@
+<div class="page">
+  <h1>Journal quotidien</h1>
+  <p class="subtitle">Remplissez le journal de la journée</p>
+
+  <div class="msg-success" *ngIf="message">{{ message }}</div>
+  <div class="msg-error" *ngIf="erreur">{{ erreur }}</div>
+
+  <!-- Informations communes -->
+  <div class="card">
+    <h2>Informations communes</h2>
+    <div class="form-row">
+      <div class="field">
+        <label>DATE</label>
+        <input type="date" [(ngModel)]="date" />
+      </div>
+      <div class="field">
+        <label>COURS</label>
+        <input type="text" [(ngModel)]="cours" placeholder="Ex: Alphabet lettres M/N" />
+      </div>
+      <div class="field">
+        <label>ACTIVITÉ</label>
+        <input type="text" [(ngModel)]="activite" placeholder="Ex: Dessin animaux" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau élèves -->
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Élève</th>
+          <th>Absent</th>
+          <th>Évaluation</th>
+          <th>Humeur</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of entries; let i = index">
+          <td class="eleve-name">
+            <span class="avatar">{{ entry.nom[0] }}</span>
+            {{ entry.nom }}
+          </td>
+          <td>
+            <input type="radio" [checked]="entry.absent"
+              (click)="entry.absent = !entry.absent" />
+          </td>
+          <td>
+            <select [(ngModel)]="entry.evaluation" [disabled]="entry.absent">
+              <option value="tres_bien">Très bien</option>
+              <option value="bien">Bien</option>
+              <option value="moyen">Moyen</option>
+            </select>
+          </td>
+          <td>
+            <span *ngFor="let h of humeurs"
+              class="emoji"
+              [class.selected]="entry.humeur === h.valeur"
+              [class.disabled]="entry.absent"
+              (click)="!entry.absent && setHumeur(i, h.valeur)">
+              {{ h.emoji }}
+            </span>
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="entry.note"
+              placeholder="Remarque..."
+              [disabled]="entry.absent" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn-valider" (click)="validerJournal()">
+    📋 Valider le journal
+  </button>
+</div>
