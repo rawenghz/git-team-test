@@ -15,7 +15,7 @@ def get_db():
         db.close()
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login-json", scheme_name="JWT")
 
 def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(get_db)):
     from models.user import User 

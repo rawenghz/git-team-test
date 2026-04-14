@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, users, classes, enfants, evenements, notifications, journal
+from routes import auth, users, classes, enfants, evenements, notifications, journal,dashboard
 
 Base.metadata.create_all(bind=engine)
 
@@ -30,5 +30,6 @@ app.include_router(evenements.router,    prefix="/evenements",    tags=["Événe
 app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 app.include_router(journal.router,       prefix="/journal",       tags=["Journal"])
 
+app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 
 

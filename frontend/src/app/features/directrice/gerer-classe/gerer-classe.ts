@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClassesService  } from '../../../core/services/classes-service';
-import { AnimatricesService } from '../../../core/services/animatrices-service';
+import { AnimatricesService } from '../../../core/services/animatrice-service/animatrices-service';
 import { Classe,ClasseForm,Animatrice } from '../../../core/models/models';
 
 

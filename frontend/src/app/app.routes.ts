@@ -38,9 +38,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./shared/components/layout-directrice/layout-directrice').then(m => m.layoutDirectrice),
     children: [
-      { path: '',
-        redirectTo: 'gerer-classe',
-        pathMatch: 'full' 
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/directrice/dashboard/dashboard').then(m => m.DashboardDirectriceComponent) ,
+         pathMatch: 'full'
       },
       {
         path: 'gerer-classe',

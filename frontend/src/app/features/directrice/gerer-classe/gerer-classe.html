@@ -103,15 +103,7 @@
             <option value="grande">Grande section</option>
           </select>
         </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Animatrice</label>
-          <select id="animatrice" class="form-select" [(ngModel)]="form.animatrice_id">
-            <option [ngValue]="null">Non assignée</option>
-            @for (anim of animatrices(); track anim.id) {
-              <option [ngValue]="anim.id">{{ anim.nom }}</option>
-            }
-          </select>
-        </div>
+        
       </div>
       @if (errorMessage()) {
         <div id="error-msg" class="alert alert-danger d-flex align-items-center gap-2 py-2 mx-0 mb-0">
