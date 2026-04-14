@@ -1,0 +1,97 @@
+<div class="modal-overlay" (click)="fermer()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ titre }}</h2>
+      <button class="btn-close" (click)="fermer()">✕</button>
+    </div>
+
+    <!-- ══ MODE VOIR ══ -->
+    <div class="modal-body" *ngIf="mode === 'voir' && enfantInput">
+      <div class="fiche-top">
+        <div class="fiche-avatar">{{ avatarEmoji(enfantInput.genre) }}</div>
+        <div class="fiche-identite">
+          <h3>{{ enfantInput.nom }}</h3>
+          <span class="badge"
+            [class.badge-fille]="enfantInput.genre === 'fille'"
+            [class.badge-garcon]="enfantInput.genre === 'garcon'">
+            {{ genreLabel(enfantInput.genre) }}
+          </span>
+        </div>
+      </div>
+      <div class="fiche-details">
+        <div class="fiche-row" *ngIf="enfantInput.age">
+          <span class="fiche-label">Âge</span>
+          <span class="fiche-value">{{ enfantInput.age }} ans</span>
+        </div>
+        <div class="fiche-row" *ngIf="enfantInput.date_naissance">
+          <span class="fiche-label">Date de naissance</span>
+          <span class="fiche-value">{{ enfantInput.date_naissance }}</span>
+        </div>
+        <div class="fiche-row">
+          <span class="fiche-label">Classe</span>
+          <span class="fiche-value">{{ getClasseNom(enfantInput.classe_id) }}</span>
+        </div>
+        <div class="fiche-row" *ngIf="enfantInput.notes_medicales">
+          <span class="fiche-label">🩺 Notes médicales</span>
+          <span class="fiche-value">{{ enfantInput.notes_medicales }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODE FORMULAIRE ══ -->
+    <div class="modal-body" *ngIf="mode === 'ajouter' || mode === 'modifier'">
+
+      <div class="form-group">
+        <label>NOM COMPLET *</label>
+        <input type="text" [(ngModel)]="enfant.nom" placeholder="Ex: Lina Benali" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ÂGE</label>
+          <input type="number" [(ngModel)]="enfant.age" placeholder="3" min="3" max="5" />
+        </div>
+        <div class="form-group">
+          <label>GENRE *</label>
+          <select [(ngModel)]="enfant.genre">
+            <option value="fille">Fille</option>
+            <option value="garcon">Garçon</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ✅ date bloquée entre 3 et 5 ans -->
+      <div class="form-group">
+        <label>DATE DE NAISSANCE <span class="label-hint">(3 à 5 ans)</span></label>
+        <input
+          type="date"
+          [(ngModel)]="enfant.date_naissance"
+          [min]="dateMin"
+          [max]="dateMax"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>CLASSE</label>
+        <select [ngModel]="enfant.classe_id" (ngModelChange)="onClasseChange($event)">
+          <option [ngValue]="undefined" disabled>— Sélectionner une classe —</option>
+          <option *ngFor="let c of classes" [ngValue]="c.id">{{ c.nom }}</option>
+        </select>
+        <span class="classes-vide" *ngIf="classes.length === 0">Aucune classe disponible</span>
+      </div>
+
+      <div class="form-group">
+        <label>NOTES MÉDICALES</label>
+        <textarea [(ngModel)]="enfant.notes_medicales" rows="3"
+                  placeholder="Allergies, asthme..."></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer" *ngIf="mode === 'ajouter' || mode === 'modifier'">
+      <button class="btn-submit" (click)="enregistrer()">{{ btnLabel }}</button>
+    </div>
+
+  </div>
+</div>
