@@ -1,0 +1,78 @@
+/* ── Classes réutilisées identiques à gerer-classe ── */
+.enfant-avatar-icon {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  background: #fce4ec;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.classe-avatar {
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  background: #e8f4fd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+}
+
+.modal-custom {
+  position: fixed;
+  inset: 0;
+  z-index: 1055;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.modal-custom-dialog {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  pointer-events: all;
+  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e8eaed;
+}
+
+.modal-custom-body {
+  padding: 20px 24px;
+}
+
+.modal-custom-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #e8eaed;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Badges genre (spécifiques enfant) ── */
+.bg-pink-subtle  { background-color: #fce4ec !important; }
+.text-pink       { color: #c2185b !important; }
+.bg-blue-subtle  { background-color: #e3f2fd !important; }

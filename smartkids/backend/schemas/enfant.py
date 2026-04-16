@@ -13,7 +13,7 @@ class EnfantCreate(BaseModel):
     age: Optional[int] = None
     genre: GenreEnum
     notes_medicales: Optional[str] = None
-    parent_id: int
+    parent_id: Optional[int] = None   # ← était int obligatoire, maintenant optionnel
     classe_id: Optional[int] = None
 
 class EnfantUpdate(BaseModel):
@@ -31,7 +31,7 @@ class EnfantOut(BaseModel):
     age: Optional[int] = None
     genre: str
     notes_medicales: Optional[str] = None
-    parent_id: int
+    parent_id: Optional[int] = None   # ← était int obligatoire, maintenant optionnel
     classe_id: Optional[int] = None
 
     class Config:

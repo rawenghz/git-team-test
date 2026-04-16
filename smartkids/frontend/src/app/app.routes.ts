@@ -48,6 +48,12 @@ export const routes: Routes = [
         path: 'gerer-classe',
         loadComponent: () => import('./features/directrice/gerer-classe/gerer-classe').then(m => m.ClassesComponent)
       },
+      {
+        path: 'gerer-enfant',
+        loadComponent: () =>
+          import('./features/directrice/gerer-enfant/gerer-enfant')
+          .then(m => m.GererEnfantComponent)
+      },
     ]
   },
 
