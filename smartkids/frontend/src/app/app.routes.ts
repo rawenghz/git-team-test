@@ -2,32 +2,41 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth.guard';
 import { NotFound } from './shared/components/not-found/not-found';
+import { ClassesComponent } from './features/directrice/gerer-classe/gerer-classe';
+import { DashboardDirectriceComponent } from './features/directrice/dashboard/dashboard';
+import { GererEnfantComponent } from './features/directrice/gerer-enfant/gerer-enfant';
+import { layoutDirectrice } from './shared/components/layout-directrice/layout-directrice';
+import { LayoutComponent } from './shared/components/layout/layout';
+import { DashboardComponent } from './features/parent/dashboard/dashboard/dashboard';
+import { EventsComponent } from './features/parent/events/events/events';
+import { ChildrenComponent } from './features/parent/children/children/children';
+import { LoginComponent } from './features/auth/login/login';
 
 export const routes: Routes = [
   // ── Public ──────────────────────────────────────
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent)
+    component: LoginComponent
   },
 
   // ── Parent ───────────────────────────────────────
   {
     path: 'parent',
     canActivate: [authGuard],
-    loadComponent: () => import('./shared/components/layout/layout').then(m => m.LayoutComponent),
+    component: LayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/parent/dashboard/dashboard/dashboard').then(m => m.DashboardComponent)
+        component: DashboardComponent
       },
       {
         path: 'children',
-        loadComponent: () => import('./features/parent/children/children/children').then(m => m.ChildrenComponent)
+        component: ChildrenComponent
       },
       {
         path: 'events',
-        loadComponent: () => import('./features/parent/events/events/events').then(m => m.EventsComponent)
+        component: EventsComponent
       },
     ]
   },
@@ -36,28 +45,26 @@ export const routes: Routes = [
   {
     path: 'directrice',
     canActivate: [authGuard],
-    loadComponent: () => import('./shared/components/layout-directrice/layout-directrice').then(m => m.layoutDirectrice),
+    component: layoutDirectrice,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/directrice/dashboard/dashboard').then(m => m.DashboardDirectriceComponent) ,
-        
+        component: DashboardDirectriceComponent,
+
       },
       {
         path: 'gerer-classe',
-        loadComponent: () => import('./features/directrice/gerer-classe/gerer-classe').then(m => m.ClassesComponent)
+        component: ClassesComponent
       },
       {
         path: 'gerer-enfant',
-        loadComponent: () =>
-          import('./features/directrice/gerer-enfant/gerer-enfant')
-          .then(m => m.GererEnfantComponent)
+        component: GererEnfantComponent
       },
     ]
   },
 
   // ── Fallback ─────────────────────────────────────
-  { path: '',   redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: NotFound }
 ];
