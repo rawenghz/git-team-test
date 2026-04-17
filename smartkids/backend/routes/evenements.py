@@ -28,13 +28,25 @@ def get_evenement(evenement_id: int,db: Session = Depends(get_db),current_user: 
 
 
 @router.post("/", response_model=EvenementOut, status_code=status.HTTP_201_CREATED)
-def create_evenement(data: EvenementCreate,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
+def create_evenement(
+    data: EvenementCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice"))
+):
+    # ── Vérification doublon : même titre + même date ──
+    existant = db.query(Evenement).filter(
+        Evenement.titre == data.titre,
+        Evenement.date  == data.date
+    ).first()
+
+    if existant:
+        raise HTTPException(status_code=409, detail="événement existe déjà")
+
     new_event = Evenement(**data.model_dump())
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
     return new_event
-
 
 @router.put("/{evenement_id}", response_model=EvenementOut)
 def update_evenement(evenement_id: int,data: EvenementUpdate,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):

@@ -61,6 +61,19 @@ export const routes: Routes = [
         path: 'gerer-enfant',
         component: GererEnfantComponent
       },
+
+      {
+        path: 'gerer-evenement',
+        loadComponent: () =>
+          import('./features/directrice/gerer-evenements/gerer-evenements')
+          .then(m => m.GererEvenementComponent)
+      },
+      {
+        path: 'gerer-notification',
+        loadComponent: () =>
+          import('./features/directrice/gerer-notifications/gerer-notifications')
+          .then(m => m.GererNotificationComponent)
+      },
     ]
   },
 
