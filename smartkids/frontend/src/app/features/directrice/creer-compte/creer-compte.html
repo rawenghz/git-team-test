@@ -1,0 +1,30 @@
+<div class="flex-grow-1 p-4">
+  <h4 class="fw-bold mb-2">Créer un compte</h4>
+  <p class="text-muted mb-4">Créer un nouveau compte pour un parent ou une animatrice</p>
+
+  <div class="d-flex gap-2 mb-4">
+    <button
+      class="btn"
+      [class.btn-primary]="mode === 'parent'"
+      [class.btn-outline-secondary]="mode !== 'parent'"
+      (click)="changerMode('parent')"
+    >
+      Parent
+    </button>
+    <button
+      class="btn"
+      [class.btn-primary]="mode === 'animatrice'"
+      [class.btn-outline-secondary]="mode !== 'animatrice'"
+      (click)="changerMode('animatrice')"
+    >
+      Animatrice
+    </button>
+  </div>
+
+ @if(mode=='parent'){
+ <app-formulaire-parent></app-formulaire-parent>}
+ @if(mode=='animatrice'){
+    <app-formulaire-animatrice></app-formulaire-animatrice>
+ }
+
+</div>

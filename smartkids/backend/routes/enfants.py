@@ -25,7 +25,9 @@ def get_enfants(db: Session = Depends(get_db),current_user: User = Depends(get_c
     else:  # parent
         return db.query(Enfant).filter(Enfant.parent_id == current_user.id).all()
 
-
+@router.get("/non-assignes")
+def get_enfants_non_assignes(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return db.query(Enfant).filter(Enfant.parent_id == None).all()
 @router.get("/{enfant_id}", response_model=EnfantOut)
 def get_enfant(enfant_id: int,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     enfant = db.query(Enfant).filter(Enfant.id == enfant_id).first()
@@ -53,21 +55,41 @@ def create_enfant(data: EnfantCreate,db: Session = Depends(get_db),current_user:
 
 
 @router.put("/{enfant_id}", response_model=EnfantOut)
-def update_enfant(enfant_id: int, data: EnfantUpdate, db: Session = Depends(get_db), current_user: User = Depends(require_role("directrice", "animatrice"))):
+def update_enfant(
+    enfant_id: int,
+    data: EnfantUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice", "animatrice", "parent"))
+):
     enfant = db.query(Enfant).filter(Enfant.id == enfant_id).first()
     if not enfant:
         raise HTTPException(status_code=404, detail="Enfant introuvable")
 
+    # check animatrice
     if current_user.role == "animatrice":
         classe = db.query(Classe).filter(Classe.animatrice_id == current_user.id).first()
         if not classe or enfant.classe_id != classe.id:
             raise HTTPException(status_code=403, detail="Accès interdit")
 
-    for field, value in data.model_dump(exclude_unset=True).items():
+    # check parent (باش يكون logical)
+    if current_user.role == "parent" and enfant.parent_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Accès interdit")
+
+    # 🔥 extract data مرة وحدة
+    update_data = data.model_dump(exclude_unset=True)
+    print("UPDATE DATA:", update_data)
+
+    # ❗ إذا فارغة → ما فما حتى update
+    if not update_data:
+        raise HTTPException(status_code=400, detail="Aucune donnée à mettre à jour")
+
+    # apply update
+    for field, value in update_data.items():
         setattr(enfant, field, value)
 
     db.commit()
     db.refresh(enfant)
+
     return enfant
 
 @router.delete("/{enfant_id}", status_code=status.HTTP_204_NO_CONTENT)

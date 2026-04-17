@@ -14,4 +14,6 @@ class User(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
     enfants= relationship("Enfant", back_populates="parent", foreign_keys="Enfant.parent_id")
     classe_animee= relationship("Classe", back_populates="animatrice", foreign_keys="Classe.animatrice_id")
-    notifications= relationship("Notification", back_populates="user")
+    
+    notifications      = relationship("Notification", foreign_keys="Notification.user_id",   back_populates="user")
+

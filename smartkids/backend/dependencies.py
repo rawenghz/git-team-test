@@ -1,7 +1,3 @@
-# ============================================
-# dependencies.py — Dépendances réutilisables
-# ============================================
-
 from database import SessionLocal
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -11,7 +7,7 @@ from config import settings
 
 
 def get_db():
-    """Fournit une session DB à chaque requête, se ferme automatiquement."""
+    """Fournit une session DB a chaque requete, se ferme automatiquement."""
     db = SessionLocal()
     try:
         yield db
@@ -45,7 +41,7 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
 
 
 def require_role(*roles: str):
-    """Vérifie que l'utilisateur connecté a l'un des rôles autorisés."""
+    """Verifie que l'utilisateur connecté a l'un des roles autorises."""
     def checker(current_user=Depends(get_current_user)):
         if current_user.role not in roles:
             raise HTTPException(
