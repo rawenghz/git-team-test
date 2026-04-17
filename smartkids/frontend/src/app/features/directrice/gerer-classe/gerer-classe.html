@@ -1,11 +1,13 @@
-
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h1 class="fw-bold mb-0" style="font-size:24px;">Gestion des Classes</h1>
     <p class="text-muted mb-0">Gérez les classes de votre établissement</p>
   </div>
   <button class="btn btn-primary d-flex align-items-center gap-2" (click)="openModal()" id="nouvelle-classe">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
     Nouvelle Classe
   </button>
 </div>
@@ -14,136 +16,156 @@
 
 
 @if (classes().length === 0) {
-  <div class="text-center py-5">
-    <div style="font-size:48px">🏫</div>
-    <p class="text-muted mt-2">Aucune classe trouvée</p>
-    <button class="btn btn-primary" (click)="openModal()">Créer la première classe</button>
-  </div>
+<div class="text-center py-5">
+  <div style="font-size:48px">🏫</div>
+  <p class="text-muted mt-2">Aucune classe trouvée</p>
+  <button class="btn btn-primary" (click)="openModal()">Créer la première classe</button>
+</div>
 }
 
 
 @else {
-  <div class="row g-3">
-    @for (classe of classes(); track classe.id) {
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card border-0 rounded-3 h-100" style="box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
-          <div class="card-body p-4">
+<div class="row g-3">
+  @for (classe of classes(); track classe.id) {
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card border-0 rounded-3 h-100" style="box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+      <div class="card-body p-4">
 
-            <!-- Card Header -->
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div class="d-flex align-items-center gap-3">
-                <div class="class-icon">🏫</div>
-                <div>
-                  <h5 class="fw-bold mb-0">{{ classe.nom }}</h5>
-                  <span class="badge rounded-pill mt-1" [ngClass]="getSectionClass(classe.section)">
-                    {{ formatSection(classe.section) }}
-                  </span>
-                </div>
-              </div>
-              <div class="dropdown">
-                <button id="dropdownMenuButton" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="dropdown">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+        <!-- Card Header -->
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="class-icon">🏫</div>
+            <div>
+              <h5 class="fw-bold mb-0">{{ classe.nom }}</h5>
+              <span class="badge rounded-pill mt-1" [ngClass]="getSectionClass(classe.section)">
+                {{ formatSection(classe.section) }}
+              </span>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button id="dropdownMenuButton" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="dropdown">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="5" r="1.5" />
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="12" cy="19" r="1.5" />
+              </svg>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button class="dropdown-item d-flex align-items-center gap-2" (click)="openModal(classe)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  Modifier
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2" (click)="openModal(classe)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                      Modifier
-                    </button>
-                  </li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <button class="dropdown-item text-danger d-flex align-items-center gap-2" (click)="confirmDelete(classe)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                      Supprimer
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            
-            <div class="d-flex align-items-center gap-2 p-2 rounded-2" style="background:#f8f9fa;">
-              <div class="animatrice-avatar">👩‍🏫</div>
-              <div>
-                <div class="small text-muted">Animatrice</div>
-                <div class="fw-semibold small">{{ classe.animatrice_nom ?? 'Non assignée' }}</div>
-              </div>
-            </div>
-
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <button class="dropdown-item text-danger d-flex align-items-center gap-2"
+                  (click)="confirmDelete(classe)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                  </svg>
+                  Supprimer
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
+
+
+        <div class="d-flex align-items-center gap-2 p-2 rounded-2" style="background:#f8f9fa;">
+          <div class="animatrice-avatar">👩‍🏫</div>
+          <div>
+            <div class="small text-muted">Animatrice</div>
+            <div class="fw-semibold small">{{ getAnimatriceName(classe.animatrice_id) }}</div>
+          </div>
+        </div>
+
       </div>
-    }
+    </div>
   </div>
+  }
+</div>
 }
 
 
 @if (showModal()) {
-  <div class="modal-backdrop-custom" (click)="closeModal()"></div>
-  <div class="modal-custom">
-    <div class="modal-custom-dialog">
+<div class="modal-backdrop-custom" (click)="closeModal()"></div>
+<div class="modal-custom">
+  <div class="modal-custom-dialog">
 
-      <div class="modal-custom-header">
-        <h5 class="fw-bold mb-0">{{ editingClasse() ? 'Modifier la classe' : 'Nouvelle classe' }}</h5>
-        <button class="btn-close" (click)="closeModal()"></button>
-      </div>
+    <div class="modal-custom-header">
+      <h5 class="fw-bold mb-0">{{ editingClasse() ? 'Modifier la classe' : 'Nouvelle classe' }}</h5>
+      <button class="btn-close" (click)="closeModal()"></button>
+    </div>
 
-      <div class="modal-custom-body">
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Nom de la classe <span class="text-danger">*</span></label>
-          <input type="text" id="nom-classe" class="form-control" [(ngModel)]="form.nom" placeholder="ex: Les Papillons">
-        </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Section <span class="text-danger">*</span></label>
-          <select class="form-select" id="section" [(ngModel)]="form.section">
-            <option value="">Choisir une section</option>
-            <option value="petite">Petite section</option>
-            <option value="moyenne">Moyenne section</option>
-            <option value="grande">Grande section</option>
-          </select>
-        </div>
-        
+    <div class="modal-custom-body">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nom de la classe <span class="text-danger">*</span></label>
+        <input type="text" id="nom-classe" class="form-control" [(ngModel)]="form.nom" placeholder="ex: Les Papillons">
       </div>
-      @if (errorMessage()) {
-        <div id="error-msg" class="alert alert-danger d-flex align-items-center gap-2 py-2 mx-0 mb-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          {{ errorMessage() }}
-        </div>
-      }
-      <div class="modal-custom-footer">
-        <button class="btn btn-light" (click)="closeModal()">Annuler</button>
-        <button id="creer" class="btn btn-primary" (click)="saveClasse()" [disabled]="!form.nom || !form.section || saving()">
-          @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
-          {{ editingClasse() ? 'Enregistrer' : 'Créer' }}
-        </button>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Section <span class="text-danger">*</span></label>
+        <select class="form-select" id="section" [(ngModel)]="form.section">
+          <option value="">Choisir une section</option>
+          <option value="petite">Petite section</option>
+          <option value="moyenne">Moyenne section</option>
+          <option value="grande">Grande section</option>
+        </select>
       </div>
 
     </div>
+    @if (errorMessage()) {
+    <div id="error-msg" class="alert alert-danger d-flex align-items-center gap-2 py-2 mx-0 mb-0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      {{ errorMessage() }}
+    </div>
+    }
+    <div class="modal-custom-footer">
+      <button class="btn btn-light" (click)="closeModal()">Annuler</button>
+      <button id="creer" class="btn btn-primary" (click)="saveClasse()"
+        [disabled]="!form.nom || !form.section || saving()">
+        @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ editingClasse() ? 'Enregistrer' : 'Créer' }}
+      </button>
+    </div>
+
   </div>
+</div>
 }
 
 
 @if (showDeleteModal()) {
-  <div class="modal-backdrop-custom" (click)="showDeleteModal.set(false)"></div>
-  <div class="modal-custom">
-    <div class="modal-custom-dialog" style="max-width: 420px;">
-      <div class="modal-custom-header">
-        <h5 class="fw-bold mb-0 text-danger">Supprimer la classe</h5>
-        <button class="btn-close" (click)="showDeleteModal.set(false)"></button>
-      </div>
-      <div class="modal-custom-body">
-        <p class="mb-0">Êtes-vous sûr de vouloir supprimer <strong>{{ classeToDelete()?.nom }}</strong> ? Cette action est irréversible.</p>
-      </div>
-      <div class="modal-custom-footer">
-        <button class="btn btn-light" (click)="showDeleteModal.set(false)">Annuler</button>
-        <button id="supprimer-classe" class="btn btn-danger" (click)="deleteClasse()" [disabled]="saving()">
-          @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
-          Supprimer
-        </button>
-      </div>
+<div class="modal-backdrop-custom" (click)="showDeleteModal.set(false)"></div>
+<div class="modal-custom">
+  <div class="modal-custom-dialog" style="max-width: 420px;">
+    <div class="modal-custom-header">
+      <h5 class="fw-bold mb-0 text-danger">Supprimer la classe</h5>
+      <button class="btn-close" (click)="showDeleteModal.set(false)"></button>
+    </div>
+    <div class="modal-custom-body">
+      <p class="mb-0">Êtes-vous sûr de vouloir supprimer <strong>{{ classeToDelete()?.nom }}</strong> ? Cette action est
+        irréversible.</p>
+    </div>
+    <div class="modal-custom-footer">
+      <button class="btn btn-light" (click)="showDeleteModal.set(false)">Annuler</button>
+      <button id="supprimer-classe" class="btn btn-danger" (click)="deleteClasse()" [disabled]="saving()">
+        @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        Supprimer
+      </button>
     </div>
   </div>
+</div>
 }

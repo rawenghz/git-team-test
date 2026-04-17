@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environments';
 @Injectable({ providedIn: 'root' })
 export class AnimatricesService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/users/animatrices`;
+  private base = `${environment.apiUrl}/users`;
 
   getAnimatrices(): Observable<any[]> { return this.http.get<any[]>(this.base); }
 }
