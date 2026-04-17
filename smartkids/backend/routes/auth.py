@@ -64,6 +64,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends
 
 
 @router.post("/login", response_model=TokenResponse)
+@router.post("/login-json", response_model=TokenResponse)
 def login_json(data: LoginRequest, db: Session = Depends(get_db)):
 
     user = authenticate_user(data.email, data.mot_de_passe, db)
