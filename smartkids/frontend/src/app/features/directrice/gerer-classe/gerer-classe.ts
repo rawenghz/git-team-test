@@ -17,6 +17,7 @@ export class ClassesComponent implements OnInit {
   private classesSvc = inject(ClassesService);
   private animatricesSvc = inject(AnimatricesService);
 
+
   classes = signal<Classe[]>([]);
   animatrices = signal<Animatrice[]>([]);
   loading = signal(true);
