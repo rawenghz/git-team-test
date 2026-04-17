@@ -22,6 +22,9 @@ class ClasseOut(BaseModel):
     nom: str
     section: Optional[str] = None
     animatrice_id: Optional[int] = None
+    animatrice_nom: Optional[str] = None 
 
     class Config:
         from_attributes = True
+
+

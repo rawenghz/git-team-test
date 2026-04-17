@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
 from enum import Enum
 
@@ -13,7 +13,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     mot_de_passe: str
     role: RoleEnum
-
+    enfants_ids: Optional[List[int]] = []
 class UserUpdate(BaseModel):
     nom: Optional[str] = None
     email: Optional[EmailStr] = None

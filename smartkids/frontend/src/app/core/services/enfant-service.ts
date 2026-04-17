@@ -9,7 +9,6 @@ export class EnfantsService {
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/enfants`;
 
-  // ── Méthodes existantes du collègue (inchangées) ──
   getMesEnfants(): Observable<Enfant[]> {
     return this.http.get<Enfant[]>(this.base);
   }
@@ -22,7 +21,10 @@ export class EnfantsService {
     return this.http.put<Enfant>(`${this.base}/${id}`, data);
   }
 
-  // ── Méthodes ajoutées pour gerer-enfant ──
+  getEnfantsNonAssignes(): Observable<Enfant[]> {
+    return this.http.get<Enfant[]>(`${this.base}/non-assignes`);
+  }
+
   getAllEnfants(): Observable<Enfant[]> {
     return this.http.get<Enfant[]>(this.base);
   }

@@ -13,3 +13,7 @@ class Classe(Base):
     animatrice= relationship("User", back_populates="classe_animee", foreign_keys=[animatrice_id])
     enfants= relationship("Enfant", back_populates="classe")
     journal= relationship("Journal", back_populates="classe")
+    # models/classe.py
+    animatrice = relationship("User", foreign_keys=[animatrice_id])
+    enfants    = relationship("Enfant", back_populates="classe", cascade="all, delete-orphan") 
+

@@ -22,6 +22,10 @@ def get_me(current_user: User = Depends(get_current_user)):
         "role": current_user.role
     }
 
+@router.get("/animatrices", response_model=List[UserOut])
+def get_animatrices(db: Session = Depends(get_db), current_user: User = Depends(require_role("directrice"))):
+    return db.query(User).filter(User.role == "animatrice").all()
+
 @router.get("/{user_id}", response_model=UserOut)
 def get_user(user_id: int,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
     user = db.query(User).filter(User.id == user_id).first()
@@ -30,9 +34,11 @@ def get_user(user_id: int,db: Session = Depends(get_db),current_user: User = Dep
     return user
 
 
+
+
 @router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def create_user(data: UserCreate,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
-    existing = db.query(User).filter(User.email == data.email).first()
+    existing = db.query(User).filter(User.email == data.email.lower()).first()
     if existing:
         raise HTTPException(status_code=400, detail="Cet email est déjà utilisé")
 
@@ -45,6 +51,16 @@ def create_user(data: UserCreate,db: Session = Depends(get_db),current_user: Use
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    if data.enfants_ids:
+        from models.enfant import Enfant
+        for enfant_id in data.enfants_ids:
+            enfant = db.query(Enfant).filter(Enfant.id == enfant_id).first()
+            if enfant:
+                enfant.parent_id = new_user.id
+        db.commit()
+
+    return new_user
     return new_user
 
 @router.put("/{user_id}", response_model=UserOut)

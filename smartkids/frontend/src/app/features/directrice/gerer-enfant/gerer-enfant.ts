@@ -62,7 +62,7 @@ export class GererEnfantComponent implements OnInit {
   chargerDonnees(): void {
     this.loading.set(true);
     this.enfantsService.getAllEnfants().subscribe({
-      next: (data) => { this.enfants.set(data); this.loading.set(false); },
+      next: (data: Enfant[]) => { this.enfants.set(data); this.loading.set(false); },
       error: ()     => { this.loading.set(false); }
     });
     this.classesService.getClasses().subscribe({
@@ -134,9 +134,9 @@ export class GererEnfantComponent implements OnInit {
     if (editing) {
       // ── Modification ──
       this.enfantsService.updateEnfant(editing.id, this.form).subscribe({
-        next: (updated) => {
+        next: (updated: Enfant) => {
           this.enfants.update(list =>
-            list.map(e => e.id === updated.id ? updated : e)
+            list.map((e: Enfant) => e.id === updated.id ? updated : e)
           );
           this.saving.set(false);
           this.closeModal();
@@ -149,12 +149,12 @@ export class GererEnfantComponent implements OnInit {
     } else {
       // ── Création ──
       this.enfantsService.createEnfant(this.form).subscribe({
-        next: (nouvel) => {
+        next: (nouvel: Enfant) => {
           this.enfants.update(list => [...list, nouvel]);
           this.saving.set(false);
           this.closeModal();
         },
-        error: (err) => {
+        error: (err: any) => {
           // Gestion doublon backend (400 ou 409)
           if (err.status === 400 || err.status === 409) {
             this.errorMessage.set('enfant existe déjà');

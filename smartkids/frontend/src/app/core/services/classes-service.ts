@@ -2,9 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environments';
+import { Classe } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ClassesService {
+  private apiUrl = 'http://localhost:8000/classes';
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/classes`;
 
@@ -22,5 +24,8 @@ export class ClassesService {
   }
   deleteClasse(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
+  }
+   getClassesNonAssignes() {
+    return this.http.get<Classe[]>(`${this.apiUrl}/non-assignes`);
   }
 }

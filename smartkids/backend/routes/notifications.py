@@ -10,14 +10,9 @@ from schemas.notification import NotificationCreate, NotificationOut
 router = APIRouter()
 
 @router.get("/", response_model=List[NotificationOut])
-def get_my_notifications(db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
-    from sqlalchemy import or_
-    return (
-        db.query(Notification)
-        .filter(or_(Notification.user_id == None, Notification.user_id == current_user.id))
-        .order_by(Notification.created_at.desc())
-        .all()
-    )
+def get_my_notifications(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return db.query(Notification).order_by(Notification.created_at.desc()).all()
+    
 
 @router.get("/all", response_model=List[NotificationOut])
 def get_all_notifications(db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):

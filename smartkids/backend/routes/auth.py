@@ -10,7 +10,9 @@ from models.user import User
 from schemas.auth import LoginRequest, TokenResponse
 from config import settings
 
+from fastapi.security import OAuth2PasswordBearer
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login-fas5ha")
 from dependencies import get_current_user
 
 router = APIRouter()
@@ -39,17 +41,15 @@ def authenticate_user(email: str, password: str, db: Session):
         return None
     return user
 
-@router.post("/login-json", response_model=TokenResponse)
-def login_json(
-    data: LoginRequest,
-    db: Session = Depends(get_db)
-):
-    user = authenticate_user(data.email, data.mot_de_passe, db)
+@router.post("/login-fas5ha", response_model=TokenResponse)
+def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_db)):
+    user = authenticate_user(form_data.username, form_data.password, db)
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou mot de passe incorrect",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     token = create_access_token(user.id)
@@ -64,11 +64,9 @@ def login_json(
 
 
 @router.post("/login", response_model=TokenResponse)
-def login_swagger(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
-):
-    user = authenticate_user(form_data.username, form_data.password, db)
+def login_json(data: LoginRequest, db: Session = Depends(get_db)):
+
+    user = authenticate_user(data.email, data.mot_de_passe, db)
 
     if not user:
         raise HTTPException(
