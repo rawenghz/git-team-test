@@ -1,9 +1,9 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClassesService  } from '../../../core/services/classes-service';
-import { AnimatricesService } from '../../../core/services/animatrices-service';
-import { Classe,ClasseForm,Animatrice } from '../../../core/models/models';
+import { ClassesService } from '../../../core/services/classes-service';
+import { AnimatricesService } from '../../../core/services/animatrice-service/animatrices-service';
+import { Classe, ClasseForm, Animatrice } from '../../../core/models/models';
 
 
 @Component({
@@ -14,18 +14,19 @@ import { Classe,ClasseForm,Animatrice } from '../../../core/models/models';
   styleUrl: './gerer-classe.css'
 })
 export class ClassesComponent implements OnInit {
-  private classesSvc    = inject(ClassesService);
+  private classesSvc = inject(ClassesService);
   private animatricesSvc = inject(AnimatricesService);
 
-  classes     = signal<Classe[]>([]);
-  animatrices = signal<Animatrice[]>([]);
-  loading     = signal(true);
-  saving      = signal(false);
 
-  showModal       = signal(false);
+  classes = signal<Classe[]>([]);
+  animatrices = signal<Animatrice[]>([]);
+  loading = signal(true);
+  saving = signal(false);
+
+  showModal = signal(false);
   showDeleteModal = signal(false);
-  editingClasse   = signal<Classe | null>(null);
-  classeToDelete  = signal<Classe | null>(null);
+  editingClasse = signal<Classe | null>(null);
+  classeToDelete = signal<Classe | null>(null);
   errorMessage = signal('');
 
 
@@ -38,15 +39,15 @@ export class ClassesComponent implements OnInit {
   loadClasses() {
     this.loading.set(true);
     this.classesSvc.getClasses().subscribe({
-      next : d => { this.classes.set(d); this.loading.set(false); },
+      next: d => { this.classes.set(d); this.loading.set(false); },
       error: () => this.loading.set(false)
     });
   }
 
   loadAnimatrices() {
     this.animatricesSvc.getAnimatrices().subscribe({
-      next : d => this.animatrices.set(d),
-      error: () => {}
+      next: d => this.animatrices.set(d),
+      error: () => { }
     });
   }
 
@@ -70,32 +71,32 @@ export class ClassesComponent implements OnInit {
   }
 
   saveClasse() {
-  if (!this.form.nom || !this.form.section) return;
+    if (!this.form.nom || !this.form.section) return;
 
-  // verifier doublons de nom de classe
-  const editing = this.editingClasse();
-  const duplicate = this.classes().find(c =>
-    c.nom.toLowerCase().trim() === this.form.nom.toLowerCase().trim() &&
-    c.id !== editing?.id
-  );
+    // verifier doublons de nom de classe
+    const editing = this.editingClasse();
+    const duplicate = this.classes().find(c =>
+      c.nom.toLowerCase().trim() === this.form.nom.toLowerCase().trim() &&
+      c.id !== editing?.id
+    );
 
-  if (duplicate) {
-    this.errorMessage.set(`Une classe "${this.form.nom}" existe déjà.`);
-    return;
+    if (duplicate) {
+      this.errorMessage.set(`Une classe "${this.form.nom}" existe déjà.`);
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.saving.set(true);
+
+    const request = editing
+      ? this.classesSvc.updateClasse(editing.id, this.form)
+      : this.classesSvc.createClasse(this.form);
+
+    request.subscribe({
+      next: () => { this.saving.set(false); this.closeModal(); this.loadClasses(); },
+      error: () => { this.saving.set(false); this.errorMessage.set('Une erreur est survenue.'); }
+    });
   }
-
-  this.errorMessage.set('');
-  this.saving.set(true);
-
-  const request = editing
-    ? this.classesSvc.updateClasse(editing.id, this.form)
-    : this.classesSvc.createClasse(this.form);
-
-  request.subscribe({
-    next: () => { this.saving.set(false); this.closeModal(); this.loadClasses(); },
-    error: () => { this.saving.set(false); this.errorMessage.set('Une erreur est survenue.'); }
-  });
-}
 
   confirmDelete(classe: Classe) {
     this.classeToDelete.set(classe);
@@ -118,6 +119,10 @@ export class ClassesComponent implements OnInit {
 
   formatSection(section: string): string {
     return { 'petite': 'Petite section', 'moyenne': 'Moyenne section', 'grande': 'Grande section' }[section] ?? section;
+  }
+
+  getAnimatriceName(id: number | null) {
+    return this.animatrices().find(a => a.id === id)?.nom ?? 'Non assignée';
   }
 
   getSectionClass(section: string): string {

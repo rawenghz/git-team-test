@@ -46,7 +46,23 @@ def get_enfant(enfant_id: int,db: Session = Depends(get_db),current_user: User =
 
 
 @router.post("/", response_model=EnfantOut, status_code=status.HTTP_201_CREATED)
-def create_enfant(data: EnfantCreate,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
+def create_enfant(
+    data: EnfantCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice"))
+):
+    # ── Vérification doublon : même nom + même classe ──
+    existant = db.query(Enfant).filter(
+        Enfant.nom == data.nom,
+        Enfant.classe_id == data.classe_id
+    ).first()
+
+    if existant:
+        raise HTTPException(
+            status_code=409,
+            detail="enfant existe déjà"
+        )
+
     new_enfant = Enfant(**data.model_dump())
     db.add(new_enfant)
     db.commit()

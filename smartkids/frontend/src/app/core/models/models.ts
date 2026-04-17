@@ -149,3 +149,29 @@ export interface NotifItem {
   temps_relatif: string;
   type: 'Info' | 'Alerte' | 'Nouveau';
 }
+// ── EnfantCreate (pour création/modification) ──────
+export interface EnfantCreate {
+  nom: string;
+  age?: number;
+  genre: Genre;
+  date_naissance?: string;
+  notes_medicales?: string;
+  classe_id?: number;
+  
+}
+
+export interface EvenementCreate {
+  titre: string;
+  description?: string;
+  date: string;
+  heure_debut?: string;
+  heure_fin?: string;
+  lieu?: string;
+  statut: StatutEvenement;
+}
+
+export interface NotificationCreate {
+  message: string;
+  type: TypeNotification;
+  user_id?: number;
+}
