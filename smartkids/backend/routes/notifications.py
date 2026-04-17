@@ -25,7 +25,20 @@ def get_all_notifications(db: Session = Depends(get_db),current_user: User = Dep
 
 
 @router.post("/", response_model=NotificationOut, status_code=status.HTTP_201_CREATED)
-def create_notification(data: NotificationCreate,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice", "animatrice"))):
+def create_notification(
+    data: NotificationCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice", "animatrice"))
+):
+    # ── Vérification doublon : même message + même type ──
+    existant = db.query(Notification).filter(
+        Notification.message == data.message,
+        Notification.type    == data.type
+    ).first()
+
+    if existant:
+        raise HTTPException(status_code=409, detail="notification existe déjà")
+
     notif = Notification(**data.model_dump())
     db.add(notif)
     db.commit()
@@ -41,3 +54,23 @@ def delete_notification(notif_id: int,db: Session = Depends(get_db),current_user
 
     db.delete(notif)
     db.commit()
+
+from schemas.notification import NotificationCreate, NotificationOut, NotificationUpdate
+
+@router.put("/{notif_id}", response_model=NotificationOut)
+def update_notification(
+    notif_id: int,
+    data: NotificationUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice"))
+):
+    notif = db.query(Notification).filter(Notification.id == notif_id).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification introuvable")
+
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(notif, field, value)
+
+    db.commit()
+    db.refresh(notif)
+    return notif

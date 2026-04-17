@@ -159,3 +159,19 @@ export interface EnfantCreate {
   classe_id?: number;
   
 }
+
+export interface EvenementCreate {
+  titre: string;
+  description?: string;
+  date: string;
+  heure_debut?: string;
+  heure_fin?: string;
+  lieu?: string;
+  statut: StatutEvenement;
+}
+
+export interface NotificationCreate {
+  message: string;
+  type: TypeNotification;
+  user_id?: number;
+}
