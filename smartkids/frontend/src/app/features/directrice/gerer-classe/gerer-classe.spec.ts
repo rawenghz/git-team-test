@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GererClasse } from './gerer-classe';
+import { ClassesComponent } from './gerer-classe';
 
-describe('GererClasse', () => {
-  let component: GererClasse;
-  let fixture: ComponentFixture<GererClasse>;
+describe('ClassesComponent', () => {
+  let component: ClassesComponent;
+  let fixture: ComponentFixture<ClassesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GererClasse]
+      imports: [ClassesComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(GererClasse);
+    fixture = TestBed.createComponent(ClassesComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
