@@ -60,7 +60,14 @@ def create_user(data: UserCreate,db: Session = Depends(get_db),current_user: Use
                 enfant.parent_id = new_user.id
         db.commit()
 
-    return new_user
+    if data.role == "animatrice" and data.classe_animee_ids:
+        from models.classe import Classe
+        for classe_id in data.classe_animee_ids:
+            classe = db.query(Classe).filter(Classe.id == classe_id).first()
+            if classe:
+                classe.animatrice_id = new_user.id
+        db.commit()
+
     return new_user
 
 @router.put("/{user_id}", response_model=UserOut)

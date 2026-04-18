@@ -11,13 +11,13 @@ export class ClassesService {
   private base = `${environment.apiUrl}/classes`;
 
   getClasses(): Observable<any[]> {
-    return this.http.get<any[]>(this.base);
+    return this.http.get<any[]>(`${this.base}/`);
   }
   getClasse(id: number): Observable<any> {
     return this.http.get<any>(`${this.base}/${id}`);
   }
   createClasse(d: any): Observable<any> {
-    return this.http.post<any>(this.base, d);
+    return this.http.post<any>(`${this.base}/`, d);
   }
   updateClasse(id: number, d: any): Observable<any> {
     return this.http.put<any>(`${this.base}/${id}`, d);
@@ -26,6 +26,6 @@ export class ClassesService {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
    getClassesNonAssignes() {
-    return this.http.get<Classe[]>(`${this.apiUrl}/non-assignes`);
+    return this.http.get<Classe[]>(`${this.base}/non-assignes`);
   }
 }

@@ -1,7 +1,8 @@
+from sys import prefix
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, users, classes, enfants, evenements, notifications, journal
+from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard, chatbot
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,6 +32,9 @@ app.include_router(enfants.router,       prefix="/enfants",       tags=["Enfants
 app.include_router(evenements.router,    prefix="/evenements",    tags=["Événements"])
 app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 app.include_router(journal.router,       prefix="/journal",       tags=["Journal"])
+
+app.include_router(dashboard.router ,prefix="/directrice/dashboard", tags=["Dashboard"])
+app.include_router(chatbot.router,       prefix="/chatbot",       tags=["Chatbot"])
 
 
 

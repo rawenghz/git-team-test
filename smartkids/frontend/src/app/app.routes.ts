@@ -1,4 +1,3 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth.guard';
 import { NotFound } from './shared/components/not-found/not-found';
@@ -13,15 +12,12 @@ import { DashboardComponent } from './features/parent/dashboard/dashboard/dashbo
 import { EventsComponent } from './features/parent/events/events/events';
 import { ChildrenComponent } from './features/parent/children/children/children';
 import { LoginComponent } from './features/auth/login/login';
+import { HomeComponent } from './features/home/home';  
 
 export const routes: Routes = [
-  // ── Public ──────────────────────────────────────
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+  { path: '',      component: HomeComponent },          
+  { path: 'login', component: LoginComponent },
 
-  // ── Parent ───────────────────────────────────────
   {
     path: 'parent',
     canActivate: [authGuard],
@@ -29,39 +25,36 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'children', component: ChildrenComponent },
-      { path: 'events', component: EventsComponent },
+      { path: 'children',  component: ChildrenComponent },
+      { path: 'events',    component: EventsComponent },
     ]
   },
 
-  // ── Directrice ───────────────────────────────────
   {
     path: 'directrice',
     canActivate: [authGuard],
     component: layoutDirectrice,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardDirectriceComponent },
-      { path: 'gerer-classe', component: ClassesComponent },
-      { path: 'gerer-enfant', component: GererEnfantComponent },
-      { path: 'creer-compte', component: CreerCompte },
+      { path: 'dashboard',        component: DashboardDirectriceComponent },
+      { path: 'gerer-classe',     component: ClassesComponent },
+      { path: 'gerer-enfant',     component: GererEnfantComponent },
+      { path: 'creer-compte',     component: CreerCompte },
       { path: 'consulter-compte', component: ConsulterCompte },
       {
         path: 'gerer-evenement',
         loadComponent: () =>
           import('./features/directrice/gerer-evenements/gerer-evenements')
-          .then(m => m.GererEvenementComponent)
+            .then(m => m.GererEvenementComponent)
       },
       {
         path: 'gerer-notification',
         loadComponent: () =>
           import('./features/directrice/gerer-notifications/gerer-notifications')
-          .then(m => m.GererNotificationComponent)
+            .then(m => m.GererNotificationComponent)
       },
     ]
   },
 
-  // ── Fallback ─────────────────────────────────────
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: NotFound }
 ];
