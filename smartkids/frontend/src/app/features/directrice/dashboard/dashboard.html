@@ -210,12 +210,7 @@
               </td>
               <td style="min-width: 160px;">
                 <div class="d-flex align-items-center gap-2">
-                  <div class="absence-bar flex-grow-1">
-                    <div class="absence-fill" [class.bg-success]="enfant.taux_pourcentage <= 10"
-                      [class.bg-warning]="enfant.taux_pourcentage > 10 && enfant.taux_pourcentage <= 25"
-                      [class.bg-danger]="enfant.taux_pourcentage > 25" [style.width.%]="enfant.taux_pourcentage">
-                    </div>
-                  </div>
+
                   <span class="taux-label" [class.text-success]="enfant.taux_pourcentage <= 10"
                     [class.text-warning]="enfant.taux_pourcentage > 10 && enfant.taux_pourcentage <= 25"
                     [class.text-danger]="enfant.taux_pourcentage > 25">
