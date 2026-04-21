@@ -157,7 +157,7 @@ export interface EnfantCreate {
   date_naissance?: string;
   notes_medicales?: string;
   classe_id?: number;
-
+  parent_id?: number;
 }
 
 export interface EvenementCreate {

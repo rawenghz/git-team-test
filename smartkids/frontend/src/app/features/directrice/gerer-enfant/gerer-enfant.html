@@ -201,6 +201,20 @@
           }
         </div>
 
+        <!-- Parent -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Parent</label>
+          <select class="form-select" [(ngModel)]="form.parent_id">
+            <option [ngValue]="undefined">— Aucun parent —</option>
+            @for (p of parents(); track p.id) {
+              <option [ngValue]="p.id">{{ p.nom }} ({{ p.email }})</option>
+            }
+          </select>
+          @if (parents().length === 0) {
+            <div class="form-text text-warning">Aucun parent enregistré</div>
+          }
+        </div>
+
         <!-- Notes médicales -->
         <div class="mb-1">
           <label class="form-label fw-semibold">Notes médicales</label>
