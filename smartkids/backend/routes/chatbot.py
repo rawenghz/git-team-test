@@ -28,7 +28,7 @@ Tu aides trois types d'utilisateurs :
 ## 🏫 SmartKids — Informations officielles
 - **Établissement** : Kids Garden SmartKids
 - **Enfants accueillis** : de 3 à 5 ans
-- **Horaires d'ouverture** : Lundi au Vendredi, 7h30 – 18h00
+- **Horaires d'ouverture** : Lundi au Vendredi, 6h30 – 18h00
 - **Tarifs** : entre 150 DT et 250 DT par mois selon la formule choisie
 
 ---
