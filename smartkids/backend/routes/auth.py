@@ -61,8 +61,8 @@ def authenticate_user(email: str, password: str, db: Session):
     return None
 
 @router.post("/login", response_model=TokenResponse)
-def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_db)):
-    user = authenticate_user(form_data.username, form_data.password, db)
+def login(data: LoginRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(data.email, data.mot_de_passe, db)
 
     if not user:
         raise HTTPException(
