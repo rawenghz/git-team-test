@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, users, classes, enfants, evenements, notifications, journal
+from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard
+from routes import participations
 
 Base.metadata.create_all(bind=engine)
 
@@ -14,7 +15,7 @@ app = FastAPI(
 # Configuration CORS (pour le frontend Angular) 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origin_regex=r"http://localhost(:[0-9]+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,6 +32,7 @@ app.include_router(enfants.router,       prefix="/enfants",       tags=["Enfants
 app.include_router(evenements.router,    prefix="/evenements",    tags=["Événements"])
 app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 app.include_router(journal.router,       prefix="/journal",       tags=["Journal"])
-
+app.include_router(dashboard.router,     prefix="/directrice/dashboard", tags=["Dashboard"])
+app.include_router(participations.router, prefix="/evenements", tags=["Participations"])
 
 

@@ -118,13 +118,31 @@ export class GererEnfantComponent implements OnInit {
       this.errorMessage.set('Veuillez remplir le nom et le genre.');
       return;
     }
-    if (this.form.date_naissance) {
-      if (this.form.date_naissance < this.dateMin ||
+    
+    if (!this.form.date_naissance) {
+      this.errorMessage.set('La date de naissance est obligatoire.');
+      return;
+
+    }
+    if (this.form.date_naissance < this.dateMin ||
           this.form.date_naissance > this.dateMax) {
         this.errorMessage.set('La date de naissance doit correspondre à un enfant de 3 à 5 ans.');
         return;
       }
+    
+    if (!this.form.classe_id) {
+      this.errorMessage.set('Veuillez sélectionner une classe.');
+      return;
     }
+
+    const today = new Date();
+    const birth = new Date(this.form.date_naissance);
+    let age = today.getFullYear() - birth.getFullYear();
+    const moisPasse = today.getMonth() > birth.getMonth() ||
+      (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
+    if (!moisPasse) age--;
+    this.form.age = age;
+    
 
     this.saving.set(true);
     this.errorMessage.set('');
@@ -185,7 +203,7 @@ export class GererEnfantComponent implements OnInit {
         this.enfantToDelete.set(null);
       },
       error: () => { this.saving.set(false); }
-    });
+    }); 
   }
 
   // ── Modal voir (fiche détail) ──
@@ -193,4 +211,15 @@ export class GererEnfantComponent implements OnInit {
     this.viewingEnfant.set(enfant);
     this.showViewModal.set(true);
   }
+
+  // ── Helper calcul âge ──
+  calculerAge(dateStr: string): number {
+  const today = new Date();
+  const birth = new Date(dateStr);
+  let age = today.getFullYear() - birth.getFullYear();
+  const moisPasse = today.getMonth() > birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
+  if (!moisPasse) age--;
+  return age;
+}
 }

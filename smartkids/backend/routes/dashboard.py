@@ -4,8 +4,7 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("/dashboard")
-def dashboard():
+def _build_dashboard():
 
     with engine.connect() as conn:
 
@@ -36,3 +35,11 @@ def dashboard():
         "derniers_utilisateurs": users,
         "notifications_recentes": notifs
     }
+
+@router.get("/dashboard")
+def dashboard():
+    return _build_dashboard()
+
+@router.get("/")
+def dashboard_root():
+    return _build_dashboard()
