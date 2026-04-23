@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -42,23 +42,32 @@ export class LoginComponent {
 
   this.auth.login({ email: email!, mot_de_passe: mot_de_passe! }).subscribe({
     next: (res: any) => {
-  const role = res.role;
+      const role = res.role;
 
-  if (role === 'directrice') {
-    this.router.navigate(['/directrice/gerer-classe']);
-  } 
-  else if (role === 'animatrice') {
-    this.router.navigate(['/animatrice/dashboard']);
-  } 
-  else if (role === 'parent') {
-    this.router.navigate(['/parent/dashboard']);
-  } 
-  else {
-    this.errorMsg.set('Rôle inconnu');
-  }
+      if (role === 'directrice') {
+        this.router.navigate(['/directrice/gerer-classe']);
+      } else if (role === 'animatrice') {
+        this.router.navigate(['/animatrice/dashboard']);
+      } else if (role === 'parent') {
+        this.router.navigate(['/parent/dashboard']);
+      } else {
+        this.errorMsg.set('Rôle inconnu');
+      }
 
-  this.loading.set(false);
-}
+      this.loading.set(false);
+    },
+    error: (err: any) => {
+      this.loading.set(false);
+      const detail = err?.error?.detail;
+      if (typeof detail === 'string') {
+        this.errorMsg.set(detail);
+      } else if (Array.isArray(detail)) {
+        // FastAPI 422 validation errors
+        this.errorMsg.set(detail.map((d: any) => d.msg).join(', '));
+      } else {
+        this.errorMsg.set('Erreur de connexion. Veuillez réessayer.');
+      }
+    }
   });
 }
 }

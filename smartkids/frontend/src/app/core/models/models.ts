@@ -101,7 +101,7 @@ export interface NotificationEnvoi {
 
 // ── Journal ───────────────────────────────────────
 export type Evaluation = 'tres_bien' | 'bien' | 'moyen' | 'a_ameliorer';
-export type Humeur     = 'heureux' | 'neutre' | 'triste' | 'malade';
+export type Humeur = 'heureux' | 'neutre' | 'triste' | 'malade';
 
 export interface JournalEntry {
   id: number;
@@ -157,7 +157,7 @@ export interface EnfantCreate {
   date_naissance?: string;
   notes_medicales?: string;
   classe_id?: number;
-  
+  parent_id?: number;
 }
 
 export interface EvenementCreate {
@@ -174,4 +174,36 @@ export interface NotificationCreate {
   message: string;
   type: TypeNotification;
   user_id?: number;
+}
+
+
+
+
+//dashboard
+export interface TauxAbsence {
+  total_absences: number;
+  total_enregistrements: number;
+  taux_pourcentage: number;
+}
+export interface TauxEnfant {
+  enfant_id: number;
+  nom: string | null;
+  total_jours: number;
+  total_absences: number;
+  taux_pourcentage: number;
+}
+
+export interface DashboardStats {
+  nb_enfants: number;
+  nb_utilisateurs: number;
+  nb_evenements: number;
+  nb_notifications: number;
+  taux_absence: {
+    total_absences: number;
+    total_jours: number;
+    taux_pourcentage: number;
+  };
+  taux_absence_par_enfant: TauxEnfant[];
+  derniers_utilisateurs: any[];
+  notifications_recentes: any[];
 }

@@ -13,7 +13,7 @@ export class EvenementsService {
   private base = `${environment.apiUrl}/evenements`;
 
   getEvenements(): Observable<Evenement[]> {
-    return this.http.get<Evenement[]>(this.base);
+    return this.http.get<Evenement[]>(`${this.base}/`);
   }
 
   getEvenement(id: number): Observable<Evenement> {
@@ -42,7 +42,7 @@ export class NotificationsService {
   private base = `${environment.apiUrl}/notifications`;
 
   getMesNotifications(): Observable<Notification[]> {
-    return this.http.get<Notification[]>(`${this.base}`);
+    return this.http.get<Notification[]>(`${this.base}/`);
   }
 
   envoyerNotification(data: NotificationEnvoi): Observable<{ detail: string }> {
