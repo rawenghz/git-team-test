@@ -6,7 +6,8 @@
       Gérez les enfants inscrits dans votre établissement
     </p>
   </div>
-  <button class="btn btn-primary d-flex align-items-center gap-2"
+  <button id="ajouter-enfant"
+          class="btn btn-primary d-flex align-items-center gap-2"
           (click)="openModal()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="2.5">
@@ -62,7 +63,8 @@
                 </div>
               </div>
               <div class="dropdown">
-                <button class="btn btn-sm btn-light rounded-circle"
+                <button id="dropdownMenuButton"
+                        class="btn btn-sm btn-light rounded-circle"
                         data-bs-toggle="dropdown">
                   <svg width="16" height="16" viewBox="0 0 24 24"
                        fill="currentColor">
@@ -84,7 +86,8 @@
                     </button>
                   </li>
                   <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2"
+                    <button id="modifier"
+                            class="dropdown-item d-flex align-items-center gap-2"
                             (click)="openModal(enfant)">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2">
@@ -96,7 +99,8 @@
                   </li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
-                    <button class="dropdown-item text-danger d-flex align-items-center gap-2"
+                    <button id="supprimer"
+                            class="dropdown-item text-danger d-flex align-items-center gap-2"
                             (click)="confirmDelete(enfant)">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2">
@@ -150,7 +154,8 @@
           <label class="form-label fw-semibold">
             Nom complet <span class="text-danger">*</span>
           </label>
-          <input type="text" class="form-control"
+          <input id="nom-enfant"
+                 type="text" class="form-control"
                  [(ngModel)]="form.nom"
                  placeholder="Ex : Lina Benali">
         </div>
@@ -159,15 +164,18 @@
         <div class="row g-3 mb-3">
           <div class="col-6">
             <label class="form-label fw-semibold">Âge</label>
-            <input type="number" class="form-control"
-                   [(ngModel)]="form.age"
-                   placeholder="3" min="3" max="5">
+            <input type="text" class="form-control"
+                  [value]="form.date_naissance
+                            ? calculerAge(form.date_naissance) + ' ans'
+                            : '—'"
+                  readonly
+                  style="background:#f8f9fa; cursor:default;">
           </div>
           <div class="col-6">
             <label class="form-label fw-semibold">
               Genre <span class="text-danger">*</span>
             </label>
-            <select class="form-select" [(ngModel)]="form.genre">
+            <select id="genre-enfant" class="form-select" [(ngModel)]="form.genre">
               <option value="fille">Fille</option>
               <option value="garcon">Garçon</option>
             </select>
@@ -177,20 +185,21 @@
         <!-- Date de naissance -->
         <div class="mb-3">
           <label class="form-label fw-semibold">
-            Date de naissance
-            <span class="text-muted fw-normal" style="font-size:12px;">
-              (3 à 5 ans)
-            </span>
+            Date de naissance <span class="text-danger">*</span>
+            <span class="text-muted fw-normal" style="font-size:12px;">(3 à 5 ans)</span>
           </label>
-          <input type="date" class="form-control"
+          <input id="date-enfant"
+                 type="date" class="form-control"
                  [(ngModel)]="form.date_naissance"
                  [min]="dateMin" [max]="dateMax">
         </div>
 
         <!-- Classe -->
         <div class="mb-3">
-          <label class="form-label fw-semibold">Classe</label>
-          <select class="form-select" [(ngModel)]="form.classe_id">
+          <label class="form-label fw-semibold">
+            Classe <span class="text-danger">*</span>
+          </label>
+          <select id="classe-enfant" class="form-select" [(ngModel)]="form.classe_id">
             <option [ngValue]="undefined">— Sélectionner une classe —</option>
             @for (c of classes(); track c.id) {
               <option [ngValue]="c.id">{{ c.nom }}</option>
@@ -241,13 +250,14 @@
 
       <div class="modal-custom-footer">
         <button class="btn btn-light" (click)="closeModal()">Annuler</button>
-        <button class="btn btn-primary"
+        <button id="enregistrer"
+                class="btn btn-primary"
                 (click)="saveEnfant()"
-                [disabled]="!form.nom || !form.genre || saving()">
+                [disabled]="!form.nom || !form.genre || !form.date_naissance || !form.classe_id || saving()">
           @if (saving()) {
             <span class="spinner-border spinner-border-sm me-2"></span>
           }
-          {{ editingEnfant() ? 'Enregistrer' : "Ajouter l'enfant" }}
+          {{ editingEnfant() ? 'Enregistrer' : "Enregistrer" }}
         </button>
       </div>
 
@@ -280,7 +290,8 @@
       <div class="modal-custom-footer">
         <button class="btn btn-light"
                 (click)="showDeleteModal.set(false)">Annuler</button>
-        <button class="btn btn-danger"
+        <button id="confirmer-supprimer"
+                class="btn btn-danger"
                 (click)="deleteEnfant()"
                 [disabled]="saving()">
           @if (saving()) {
