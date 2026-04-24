@@ -48,3 +48,14 @@ class JournalOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Ajoute juste ça à la fin de ton fichier schemas/journal.py
+
+class JournalByDateOut(BaseModel):
+    date: date
+    cours: Optional[str] = None
+    activite: Optional[str] = None
+    entrees: list[JournalOut] = []  # liste de tous les enfants ce jour-là
+
+    class Config:
+        from_attributes = True

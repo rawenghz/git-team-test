@@ -1,0 +1,71 @@
+<div class="page-header">
+  <div>
+    <h1>Événements</h1>
+    <p>Prochains événements de la crèche</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-ring"></div>
+    <span>Chargement...</span>
+  </div>
+} @else {
+
+  @if (evenements().length === 0) {
+    <p style="color:#94A3B8; font-size:14px;">Aucun événement disponible.</p>
+  }
+
+  <div class="evenements-list">
+    @for (e of evenements(); track e.id) {
+      <div class="event-card">
+
+        <div class="event-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+
+        <div class="event-body">
+          <div class="event-top">
+            <span class="event-titre">{{ e.titre }}</span>
+            <span class="badge" [class.badge-avenir]="getStatut(e.date) === 'À venir'"
+                                [class.badge-passe]="getStatut(e.date) === 'Passé'">
+              {{ getStatut(e.date) }}
+            </span>
+          </div>
+          <span class="event-desc">{{ e.description }}</span>
+          <div class="event-meta">
+            <span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {{ formatDate(e.date) }}
+            </span>
+            <span *ngIf="e.heure_debut && e.heure_fin">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ e.heure_debut }} - {{ e.heure_fin }}
+            </span>
+            <span *ngIf="e.lieu">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              {{ e.lieu }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+    }
+  </div>
+}

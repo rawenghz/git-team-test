@@ -20,7 +20,12 @@ def get_classes(db: Session = Depends(get_db),current_user: User = Depends(get_c
         return db.query(Classe).filter(Classe.animatrice_id == current_user.id).all()
     return db.query(Classe).all()
 
-
+@router.get("/my-classe", response_model=ClasseOut)
+def get_my_classe(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    classe = db.query(Classe).filter(Classe.animatrice_id == current_user.id).first()
+    if not classe:
+        raise HTTPException(status_code=404, detail="Aucune classe affectée à cette animatrice")
+    return classe
 @router.get("/{classe_id}", response_model=ClasseOut)
 def get_classe(classe_id: int,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     classe = db.query(Classe).filter(Classe.id == classe_id).first()

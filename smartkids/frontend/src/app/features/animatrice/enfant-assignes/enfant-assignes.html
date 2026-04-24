@@ -1,0 +1,77 @@
+<div class="page-header">
+  <div>
+    <h1>Enfants assignés</h1>
+    <p *ngIf="classe()">
+      Classe {{ classe().nom }} — {{ enfants().length }} enfants
+    </p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-ring"></div>
+    <span>Chargement...</span>
+  </div>
+} @else {
+
+  <!-- Liste des enfants -->
+  <div class="enfants-list">
+    @for (enfant of enfants(); track enfant.id) {
+      <div class="enfant-card">
+        <div class="enfant-avatar">
+          {{ getEmoji(enfant.genre) }}
+        </div>
+        <div class="enfant-info">
+          <span class="enfant-nom">{{ enfant.nom }}</span>
+          <span class="enfant-detail">
+        {{ enfant.age ?? '?' }} ans · {{ getGenreLabel(enfant.genre) }}
+          </span>
+        </div>
+        <button class="btn-fiche" (click)="voirFiche(enfant)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Voir fiche
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Modal fiche enfant -->
+  @if (enfantSelectionne()) {
+    <div class="modal-overlay" (click)="fermerFiche()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-avatar">{{ getEmoji(enfantSelectionne().genre) }}</div>
+          <div>
+            <h2>{{ enfantSelectionne().nom }}</h2>
+            <span class="enfant-detail">{{ getGenreLabel(enfantSelectionne().genre) }}</span>
+          </div>
+          <button class="btn-close" (click)="fermerFiche()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="fiche-row">
+            <span class="fiche-label">Âge</span>
+            <span class="fiche-value">{{ enfantSelectionne().age }} ans</span>
+          </div>
+          <div class="fiche-row">
+            <span class="fiche-label">Date de naissance</span>
+            <span class="fiche-value">{{ enfantSelectionne().date_naissance | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="fiche-row">
+            <span class="fiche-label">Genre</span>
+            <span class="fiche-value">{{ getGenreLabel(enfantSelectionne().genre) }}</span>
+          </div>
+          <div class="fiche-row">
+            <span class="fiche-label">Notes médicales</span>
+            <span class="fiche-value">{{ enfantSelectionne().notes_medicales || 'Aucune' }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+}

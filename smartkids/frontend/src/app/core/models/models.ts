@@ -159,3 +159,44 @@ export interface EnfantCreate {
   classe_id?: number;
   
 }
+
+
+
+
+
+
+
+
+export interface JournalOut {
+  id: number;
+  enfant_id: number;
+  classe_id: number;
+  date: string;
+  cours: string;
+  activite: string;
+  absent: boolean;
+  evaluation: string;
+  humeur: string;
+  note: string;
+}
+
+export interface JournalCreate {
+  enfant_id: number;
+  classe_id: number;
+  date: string;
+  cours: string;
+  activite: string;
+  absent: boolean;
+  evaluation: string;
+  humeur: string;
+  note: string;
+}
+
+export interface JournalUpdate {
+  cours?: string;
+  activite?: string;
+  absent?: boolean;
+  evaluation?: string;
+  humeur?: string;
+  note?: string;
+}

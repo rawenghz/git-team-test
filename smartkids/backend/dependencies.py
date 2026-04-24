@@ -21,7 +21,7 @@ def get_db():
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
 
-def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     from models.user import User 
 
     credentials_exception = HTTPException(
@@ -31,9 +31,10 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        user_id: int = payload.get("sub")
+        user_id = payload.get("sub")
         if user_id is None:
             raise credentials_exception
+        user_id = int(user_id)  # ✅ CORRECTION : convertir string → int
     except JWTError:
         raise credentials_exception
 
@@ -41,7 +42,6 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
     if user is None:
         raise credentials_exception
     return user
-
 
 
 def require_role(*roles: str):

@@ -1,0 +1,181 @@
+<div class="page">
+  <h1>Journal quotidien</h1>
+  <p class="subtitle">Remplissez le journal de la journée</p>
+
+  <div class="msg-success" *ngIf="message">{{ message }}</div>
+  <div class="msg-error" *ngIf="erreur">{{ erreur }}</div>
+
+  <!-- Informations communes -->
+  <div class="card">
+    <h2>Informations communes</h2>
+    <div class="form-row">
+      <div class="field">
+        <label>DATE</label>
+        <input type="date" [(ngModel)]="date" (change)="chargerJournalDate()" />
+      </div>
+      <div class="field">
+        <label>COURS</label>
+        <input type="text" [(ngModel)]="cours" placeholder="Ex: Alphabet lettres M/N"
+          [disabled]="journalExistant && !modeEditionActif" />
+      </div>
+      <div class="field">
+        <label>ACTIVITÉ</label>
+        <input type="text" [(ngModel)]="activite" placeholder="Ex: Dessin animaux"
+          [disabled]="journalExistant && !modeEditionActif" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ FORMULAIRE DE SAISIE : aucun journal pour cette date -->
+  <div class="card" *ngIf="!journalExistant">
+    <table>
+      <thead>
+        <tr>
+          <th>Élève</th>
+          <th>Absent</th>
+          <th>Évaluation</th>
+          <th>Humeur</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of entries; let i = index">
+          <td>
+            <div class="eleve-name">
+              <span class="avatar">{{ entry.nom[0] }}</span>
+              {{ entry.nom }}
+            </div>
+          </td>
+          <td>
+            <input type="radio" [checked]="entry.absent"
+              (click)="entry.absent = !entry.absent" />
+          </td>
+          <td>
+            <select [(ngModel)]="entry.evaluation" [disabled]="entry.absent">
+              <option value="tres_bien">Très bien</option>
+              <option value="bien">Bien</option>
+              <option value="moyen">Moyen</option>
+            </select>
+          </td>
+          <td>
+            <span *ngFor="let h of humeurs"
+              class="emoji"
+              [class.selected]="entry.humeur === h.valeur"
+              [class.disabled]="entry.absent"
+              (click)="!entry.absent && setHumeur(i, h.valeur)">
+              {{ h.emoji }}
+            </span>
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="entry.note"
+              placeholder="Remarque..."
+              [disabled]="entry.absent" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <button class="btn-valider" (click)="validerJournal()">Valider le journal</button>
+  </div>
+
+  <!-- ✅ MODE LECTURE / ÉDITION : journal déjà rempli -->
+  <div class="card" *ngIf="journalExistant">
+
+    <!-- Bandeau -->
+    <div class="journal-actions">
+      <span class="journal-exist-label">📋 Journal déjà rempli pour cette date.</span>
+      <div class="action-buttons" *ngIf="!modeEditionActif">
+        <button class="btn-modifier" (click)="ouvrirEditionTout()">✏️ Modifier</button>
+        <button class="btn-supprimer" (click)="demanderSuppression()">🗑️ Supprimer</button>
+      </div>
+      <div class="action-buttons" *ngIf="modeEditionActif">
+        <button class="btn-valider" (click)="sauvegarderTout()">💾 Sauvegarder tout</button>
+        <button class="btn-cancel" (click)="annulerEdition()">Annuler</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Élève</th>
+          <th>Absent</th>
+          <th>Évaluation</th>
+          <th>Humeur</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let j of journals">
+
+          <!-- MODE LECTURE -->
+          <ng-container *ngIf="!modeEditionActif">
+            <td>
+              <div class="eleve-name">
+                <span class="avatar">{{ getEntryNom(j.enfant_id)[0] }}</span>
+                {{ getEntryNom(j.enfant_id) }}
+              </div>
+            </td>
+            <td>{{ j.absent ? '❌ Absent' : '✅ Présent' }}</td>
+            <td>
+              <span *ngIf="!j.absent">
+                {{ j.evaluation === 'tres_bien' ? 'Très bien' : j.evaluation === 'bien' ? 'Bien' : 'Moyen' }}
+              </span>
+              <span *ngIf="j.absent">—</span>
+            </td>
+            <td>{{ getEmoji(j.humeur) }}</td>
+            <td>{{ j.note || '—' }}</td>
+          </ng-container>
+
+          <!-- MODE ÉDITION : toutes les lignes ouvertes -->
+          <ng-container *ngIf="modeEditionActif && editForms[j.id]">
+            <td>
+              <div class="eleve-name">
+                <span class="avatar">{{ getEntryNom(j.enfant_id)[0] }}</span>
+                {{ getEntryNom(j.enfant_id) }}
+              </div>
+            </td>
+            <td>
+              <input type="radio" [checked]="!!editForms[j.id].absent"
+                (click)="editForms[j.id].absent = !editForms[j.id].absent" />
+            </td>
+            <td>
+              <select [(ngModel)]="editForms[j.id].evaluation" [disabled]="!!editForms[j.id].absent">
+                <option value="tres_bien">Très bien</option>
+                <option value="bien">Bien</option>
+                <option value="moyen">Moyen</option>
+              </select>
+            </td>
+            <td>
+              <span *ngFor="let h of humeurs"
+                class="emoji"
+                [class.selected]="editForms[j.id].humeur === h.valeur"
+                [class.disabled]="!!editForms[j.id].absent"
+                (click)="!editForms[j.id].absent && (editForms[j.id].humeur = h.valeur)">
+                {{ h.emoji }}
+              </span>
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="editForms[j.id].note"
+                placeholder="Remarque..."
+                [disabled]="!!editForms[j.id].absent" />
+            </td>
+          </ng-container>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ BOÎTE DE CONFIRMATION DE SUPPRESSION -->
+  <div class="overlay" *ngIf="confirmationSuppression">
+    <div class="dialog">
+      <h3>Supprimer le journal</h3>
+      <p>Voulez-vous vraiment supprimer le journal du <strong>{{ date }}</strong> ? Cette action est irréversible.</p>
+      <div class="dialog-buttons">
+        <button class="btn-supprimer" (click)="confirmerSuppression()">🗑️ Supprimer</button>
+        <button class="btn-cancel" (click)="annulerSuppression()">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+</div>

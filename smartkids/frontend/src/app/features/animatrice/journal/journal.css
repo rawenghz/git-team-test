@@ -1,0 +1,48 @@
+.page { padding: 2rem; max-width: 1100px; }
+h1 { font-size: 22px; font-weight: 700; margin: 0; }
+.subtitle { color: #888; margin: 4px 0 24px; font-size: 14px; }
+.msg-success { background: #e8f5e9; color: #2e7d32; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+.msg-error { background: #fdecea; color: #c62828; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+.card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+h2 { font-size: 14px; font-weight: 700; margin: 0 0 1rem; }
+.form-row { display: flex; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+label { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 0.05em; }
+input[type="text"], input[type="date"], select { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 13px; font-weight: 600; color: #666; padding: 10px 12px; border-bottom: 1px solid #eee; }
+td { padding: 12px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+.eleve-name { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: #fff3e0; color: #e65100; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.emoji { font-size: 22px; cursor: pointer; opacity: 0.3; margin-right: 4px; transition: opacity 0.15s; }
+.emoji.selected { opacity: 1; }
+.emoji:hover { opacity: 0.7; }
+.emoji.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+/* Bouton Valider / Sauvegarder (bleu principal) */
+.btn-valider { background: #2196f3; color: #fff; border: none; border-radius: 10px; padding: 13px 28px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.btn-valider:hover { background: #1976d2; }
+
+/* ✅ Bouton Modifier — bleu outline */
+.btn-modifier { background: #fff; color: #2196f3; border: 2px solid #2196f3; border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-modifier:hover { background: #2196f3; color: #fff; }
+
+/* ✅ Bouton Supprimer — bleu foncé */
+.btn-supprimer { background: #1565c0; color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-supprimer:hover { background: #0d47a1; }
+
+/* Bouton Annuler — neutre */
+.btn-cancel { background: #fff; color: #666; border: 1px solid #ddd; border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-cancel:hover { background: #f5f5f5; }
+
+/* Bandeau journal existant */
+.journal-actions { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+.journal-exist-label { font-size: 14px; color: #555; }
+.action-buttons { display: flex; gap: 8px; }
+
+/* Overlay confirmation suppression */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.dialog { background: #fff; border-radius: 14px; padding: 2rem; max-width: 420px; width: 90%; }
+.dialog h3 { margin: 0 0 12px; font-size: 17px; }
+.dialog p { font-size: 14px; color: #555; margin-bottom: 1.5rem; }
+.dialog-buttons { display: flex; gap: 10px; justify-content: flex-end; }

@@ -89,10 +89,17 @@ def get_journal_classe(classe_id: int,date_filtre: Optional[date] = None,db: Ses
     return query.order_by(Journal.date.desc()).all()
 
 @router.delete("/{journal_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_journal(journal_id: int,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
+def delete_journal(journal_id: int, db: Session = Depends(get_db), current_user: User = Depends(require_role("animatrice", "directrice"))):
     entry = db.query(Journal).filter(Journal.id == journal_id).first()
     if not entry:
         raise HTTPException(status_code=404, detail="Entrée journal introuvable")
-
+ 
+    # L'animatrice ne peut supprimer que le journal de sa propre classe
+    if current_user.role == "animatrice":
+        classe = db.query(Classe).filter(Classe.animatrice_id == current_user.id).first()
+        if not classe or entry.classe_id != classe.id:
+            raise HTTPException(status_code=403, detail="Accès interdit")
+ 
     db.delete(entry)
     db.commit()
+ 

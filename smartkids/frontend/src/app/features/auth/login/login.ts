@@ -45,7 +45,7 @@ export class LoginComponent {
   const role = res.role;
 
   if (role === 'directrice') {
-    this.router.navigate(['/directrice/gerer-classe']);
+    this.router.navigate(['/directrice/dashboard']);
   } 
   else if (role === 'animatrice') {
     this.router.navigate(['/animatrice/dashboard']);
