@@ -25,6 +25,12 @@ def get_enfants(db: Session = Depends(get_db),current_user: User = Depends(get_c
     else:  # parent
         return db.query(Enfant).filter(Enfant.parent_id == current_user.id).all()
 
+@router.get("/stats")
+def get_enfants_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    assignes = db.query(Enfant).filter(Enfant.parent_id != None).count()
+    libres = db.query(Enfant).filter(Enfant.parent_id == None).count()
+    return {"assignes": assignes, "libres": libres}
+
 @router.get("/non-assignes")
 def get_enfants_non_assignes(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return db.query(Enfant).filter(Enfant.parent_id == None).all()

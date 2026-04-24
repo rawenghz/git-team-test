@@ -6,6 +6,7 @@ import { ConsulterCompte } from './features/directrice/consulter-compte/consulte
 import { ClassesComponent } from './features/directrice/gerer-classe/gerer-classe';
 import { DashboardDirectriceComponent } from './features/directrice/dashboard/dashboard';
 import { GererEnfantComponent } from './features/directrice/gerer-enfant/gerer-enfant';
+import { GererComptesComponent } from './features/directrice/gerer-comptes/gerer-comptes.component';
 import { layoutDirectrice } from './shared/components/layout-directrice/layout-directrice';
 import { LayoutComponent } from './shared/components/layout/layout';
 import { DashboardComponent } from './features/parent/dashboard/dashboard/dashboard';
@@ -39,6 +40,7 @@ export const routes: Routes = [
       { path: 'dashboard',        component: DashboardDirectriceComponent },
       { path: 'gerer-classe',     component: ClassesComponent },
       { path: 'gerer-enfant',     component: GererEnfantComponent },
+      { path: 'gerer-comptes',    component: GererComptesComponent },
       { path: 'creer-compte',     component: CreerCompte },
       { path: 'consulter-compte', component: ConsulterCompte },
       {

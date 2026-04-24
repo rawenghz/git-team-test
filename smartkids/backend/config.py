@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: int = 3306
-    DB_NAME: str = "smartkids1"
+    DB_NAME: str = "smartkids"
     DB_USER: str = "root"
     DB_PASSWORD: str = ""
 

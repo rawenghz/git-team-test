@@ -19,6 +19,7 @@ class UserUpdate(BaseModel):
     nom: Optional[str] = None
     email: Optional[EmailStr] = None
     role: Optional[RoleEnum] = None
+    enfants_ids: Optional[List[int]] = None
 
 class UserOut(BaseModel):
     id: int

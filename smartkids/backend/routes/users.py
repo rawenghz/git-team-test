@@ -21,7 +21,9 @@ def get_me(current_user: User = Depends(get_current_user)):
         "email": current_user.email,
         "role": current_user.role
     }
-
+@router.get("/parents", response_model=List[UserOut])
+def get_parents(db: Session = Depends(get_db), current_user: User = Depends(require_role("directrice"))):
+    return db.query(User).filter(User.role == "parent").all()
 @router.get("/animatrices", response_model=List[UserOut])
 def get_animatrices(db: Session = Depends(get_db), current_user: User = Depends(require_role("directrice"))):
     return db.query(User).filter(User.role == "animatrice").all()
@@ -79,11 +81,25 @@ def update_user(user_id: int,data: UserUpdate,db: Session = Depends(get_db),curr
     if data.nom:   user.nom   = data.nom
     if data.email: user.email = data.email
     if data.role:  user.role  = data.role
-
+    if data.enfants_ids is not None:                           
+        from models.enfant import Enfant
+        for enfant in db.query(Enfant).filter(Enfant.parent_id == user_id).all():
+            enfant.parent_id = None
+        for enfant_id in data.enfants_ids:
+            enfant = db.query(Enfant).filter(Enfant.id == enfant_id).first()
+            if enfant:
+                enfant.parent_id = user_id
     db.commit()
     db.refresh(user)
     return user
-
+@router.put("/{user_id}/password", status_code=200)
+def update_password(user_id: int, body: dict, db: Session = Depends(get_db), current_user: User = Depends(require_role("directrice"))):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur introuvable")
+    user.mot_de_passe = hash_password(body.get("nouveau_mot_de_passe", ""))
+    db.commit()
+    return {"message": "Mot de passe mis à jour"}
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
