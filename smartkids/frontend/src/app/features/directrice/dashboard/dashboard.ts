@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { DashboardService } from '../../../core/services/dashboard-service/dashboard-service';
 import { DashboardStats } from '../../../core/models/models';
 
@@ -30,7 +30,6 @@ export class DashboardDirectriceComponent implements OnInit {
 
   loading = signal(true);
 
-  // Computed signal for absence gauge color
   absenceColor = computed(() => {
     const taux = this.stats().taux_absence?.taux_pourcentage ?? 0;
     if (taux <= 10) return 'success';

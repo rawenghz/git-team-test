@@ -6,7 +6,7 @@ import { Classe } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ClassesService {
-  private apiUrl = 'http://localhost:8000/classes';
+
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/classes`;
 
