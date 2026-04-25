@@ -1,1 +1,27 @@
-<p>notification works!</p>
+<div class="notification-container">
+  <h2>Notifications</h2>
+
+  @if (loading()) {
+    <p class="loading">Chargement...</p>
+  } @else if (notifications().length === 0) {
+    <p class="empty">Aucune notification disponible.</p>
+  } @else {
+    <ul class="notification-list">
+      @for (notif of notifications(); track notif.id) {
+        <li class="notification-item type-{{ notif.type }}">
+          <div class="notif-header">
+            <span class="notif-badge">{{ getTypeBadge(notif.type) }}</span>
+            <span class="notif-user">
+              {{ notif.user_id ? 'Utilisateur #' + notif.user_id : 'Global' }}
+            </span>
+          </div>
+          <p class="notif-message">{{ notif.message }}</p>
+          <div class="notif-footer">
+            <small class="notif-date">{{ formatDate(notif.created_at) }}</small>
+            <small class="notif-time">{{ timeAgo(notif.created_at) }}</small>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

@@ -62,7 +62,7 @@ export const routes: Routes = [
        {
         path: 'notification',
         loadComponent: () => import('./features/animatrice/notification/notification')
-          .then(m => m.Notification)
+          .then(m => m.NotificationComponent)
       }, 
     ]
   },
