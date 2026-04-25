@@ -1,11 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard, chatbot
-<<<<<<< HEAD
-=======
-from routes import participations
->>>>>>> 42f29add3404ebd7096d692c1afa8ccec8bfe949
+from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard, chatbot,participations
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,7 +14,7 @@ app = FastAPI(
 # Configuration CORS (pour le frontend Angular) 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"http://localhost(:[0-9]+)?",
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
