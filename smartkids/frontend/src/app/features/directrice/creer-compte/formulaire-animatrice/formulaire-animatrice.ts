@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Classe } from '../../../../core/models/models';
 import { AnimatricesService } from '../../../../core/services/animatrices-service';
 import { ClassesService } from '../../../../core/services/classes-service';
@@ -7,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-formulaire-animatrice',
+  standalone: true,
   imports: [FormsModule],
   templateUrl: './formulaire-animatrice.html',
   styleUrl: './formulaire-animatrice.css',
@@ -22,7 +24,8 @@ export class FormulaireAnimatrice {
   mot_de_passe: string = '';
   constructor(
       private ClassesService: ClassesService,
-      private userService: UserService
+      private userService: UserService,
+      private router: Router
     ) {}
     ngOnInit() {
     this.ClassesService.getClassesNonAssignes().subscribe({
@@ -49,7 +52,7 @@ export class FormulaireAnimatrice {
       email: this.email,
       mot_de_passe: this.mot_de_passe,
       role: 'animatrice',
-      classe_id: this.selectedClasse,
+      classe_animee_ids: this.selectedClasse ? [this.selectedClasse] : [],
     };
     
 
@@ -60,11 +63,16 @@ export class FormulaireAnimatrice {
         form.reset();
         this.selectedClasse = null;
 
-//n3wd nchargi les classe   disponibles
+        //n3wd nchargi les classe   disponibles
         this.ClassesService.getClassesNonAssignes().subscribe({
             next: (data: any) => { this.Classe = data; },
             error: (err: any) => { console.log(err); }
         });
+
+        // Rediriger vers gerer-comptes après 1.5 secondes
+        setTimeout(() => {
+          this.router.navigate(['/directrice/gerer-comptes']);
+        }, 1500);
       },
       error: (err: any) => {
        this.errorMessage = 'Erreur: ' + JSON.stringify(err.error);

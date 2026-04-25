@@ -3,13 +3,15 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: int = 3306
-    DB_NAME: str = "smartkids1"
+    DB_NAME: str = "smartkids"
     DB_USER: str = "root"
     DB_PASSWORD: str = ""
 
     SECRET_KEY: str = "smartkids_secret_key_change_in_production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    openrouter_api_key: str
 
     @property
     def DATABASE_URL(self) -> str:

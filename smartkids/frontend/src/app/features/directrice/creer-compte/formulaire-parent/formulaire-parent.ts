@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { EnfantsService } from '../../../../core/services/enfant-service';
 import { UserService } from '../../../../core/services/user';
 
 @Component({
   selector: 'app-formulaire-parent',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './formulaire-parent.html',
   styleUrl: './formulaire-parent.css',
@@ -23,7 +25,8 @@ export class FormulaireParent implements OnInit {
 
   constructor(
     private enfantService: EnfantsService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -68,11 +71,16 @@ export class FormulaireParent implements OnInit {
         form.reset();
         this.selectedEnfants = [];
 
-//n3wd nchargi les enfants  disponibles
+        //n3wd nchargi les enfants  disponibles
         this.enfantService.getEnfantsNonAssignes().subscribe({
             next: (data: any) => { this.enfants = data; },
             error: (err: any) => { console.log(err); }
         });
+
+        // Rediriger vers gerer-comptes après 1.5 secondes
+        setTimeout(() => {
+          this.router.navigate(['/directrice/gerer-comptes']);
+        }, 1500);
       },
       error: (err: any) => {
        this.errorMessage = 'Erreur: ' + JSON.stringify(err.error);

@@ -14,10 +14,12 @@ class UserCreate(BaseModel):
     mot_de_passe: str
     role: RoleEnum
     enfants_ids: Optional[List[int]] = []
+    classe_animee_ids: Optional[List[int]] = []
 class UserUpdate(BaseModel):
     nom: Optional[str] = None
     email: Optional[EmailStr] = None
     role: Optional[RoleEnum] = None
+    enfants_ids: Optional[List[int]] = None
 
 class UserOut(BaseModel):
     id: int

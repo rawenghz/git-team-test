@@ -11,6 +11,7 @@ class User(Base):
     email= Column(String(150), unique=True, nullable=False, index=True)
     mot_de_passe = Column(String(255), nullable=False)
     role= Column(Enum("parent", "animatrice", "directrice"), nullable=False)
+
     created_at = Column(TIMESTAMP, server_default=func.now())
     enfants= relationship("Enfant", back_populates="parent", foreign_keys="Enfant.parent_id")
     classe_animee= relationship("Classe", back_populates="animatrice", foreign_keys="Classe.animatrice_id")

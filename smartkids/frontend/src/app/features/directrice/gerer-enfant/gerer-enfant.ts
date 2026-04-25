@@ -2,7 +2,8 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EnfantsService } from '../../../core/services/enfant-service';
 import { ClassesService } from '../../../core/services/classes-service';
-import { Enfant, EnfantCreate, Classe } from '../../../core/models/models';
+import { UserService } from '../../../core/services/user';
+import { Enfant, EnfantCreate, Classe, User } from '../../../core/models/models';
 
 @Component({
   selector: 'app-gerer-enfant',
@@ -14,10 +15,12 @@ import { Enfant, EnfantCreate, Classe } from '../../../core/models/models';
 export class GererEnfantComponent implements OnInit {
   private enfantsService = inject(EnfantsService);
   private classesService = inject(ClassesService);
+  private userService    = inject(UserService);
 
   // ── État principal ──
   enfants = signal<Enfant[]>([]);
   classes = signal<Classe[]>([]);
+  parents = signal<User[]>([]);
   loading = signal(false);
 
   // ── Modal ajout / modification ──
@@ -56,7 +59,7 @@ export class GererEnfantComponent implements OnInit {
 
   private emptyForm(): EnfantCreate {
     return { nom: '', age: undefined, genre: 'fille',
-             date_naissance: '', notes_medicales: '', classe_id: undefined };
+             date_naissance: '', notes_medicales: '', classe_id: undefined, parent_id: undefined };
   }
 
   chargerDonnees(): void {
@@ -67,6 +70,10 @@ export class GererEnfantComponent implements OnInit {
     });
     this.classesService.getClasses().subscribe({
       next: (data) => this.classes.set(data),
+      error: ()    => {}
+    });
+    this.userService.getParents().subscribe({
+      next: (data) => this.parents.set(data),
       error: ()    => {}
     });
   }
@@ -96,7 +103,8 @@ export class GererEnfantComponent implements OnInit {
         genre:           enfant.genre,
         date_naissance:  enfant.date_naissance ?? '',
         notes_medicales: enfant.notes_medicales ?? '',
-        classe_id:       enfant.classe_id
+        classe_id:       enfant.classe_id,
+        parent_id:       enfant.parent_id
       };
     } else {
       this.editingEnfant.set(null);

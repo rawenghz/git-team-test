@@ -10,7 +10,7 @@ export class EnfantsService {
   private base = `${environment.apiUrl}/enfants`;
 
   getMesEnfants(): Observable<Enfant[]> {
-    return this.http.get<Enfant[]>(this.base);
+    return this.http.get<Enfant[]>(`${this.base}/`);
   }
 
   getEnfant(id: number): Observable<Enfant> {
@@ -26,11 +26,11 @@ export class EnfantsService {
   }
 
   getAllEnfants(): Observable<Enfant[]> {
-    return this.http.get<Enfant[]>(this.base);
+    return this.http.get<Enfant[]>(`${this.base}/`);
   }
 
   createEnfant(data: EnfantCreate): Observable<Enfant> {
-    return this.http.post<Enfant>(this.base, data);
+    return this.http.post<Enfant>(`${this.base}/`, data);
   }
 
   deleteEnfant(id: number): Observable<void> {
