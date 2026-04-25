@@ -14,6 +14,11 @@
 }
 
 @media (max-width: 576px) {
-  h1 { font-size: 20px !important; }
-  .table { font-size: 12px !important; }
+  h1 {
+    font-size: 20px !important;
+  }
+
+  .table {
+    font-size: 12px !important;
+  }
 }
