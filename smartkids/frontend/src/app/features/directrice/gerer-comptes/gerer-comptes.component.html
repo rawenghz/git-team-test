@@ -1,0 +1,282 @@
+<div class="gerer-comptes-container">
+
+  <!-- Titre -->
+  <div class="page-header">
+    <div>
+      <h1>Gérer les comptes</h1>
+      <p class="page-subtitle">Consultez, modifiez ou supprimez les comptes parents et animatrices.</p>
+    </div>
+    <button class="btn-ajouter" routerLink="/directrice/creer-compte">
+      <i class="bi bi-plus-lg"></i> Ajouter un compte
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon parents-icon"><i class="bi bi-people"></i></div>
+      <div class="stat-info">
+        <span class="stat-label">PARENTS</span>
+        <span class="stat-value">{{ stats.totalParents }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon animatrices-icon"><i class="bi bi-mortarboard"></i></div>
+      <div class="stat-info">
+        <span class="stat-label">ANIMATRICES</span>
+        <span class="stat-value">{{ stats.totalAnimatrices }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon assignes-icon"><i class="bi bi-emoji-smile"></i></div>
+      <div class="stat-info">
+        <span class="stat-label">ENFANTS ASSIGNÉS</span>
+        <span class="stat-value">{{ stats.enfantsAssignes }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon libres-icon"><i class="bi bi-emoji-neutral"></i></div>
+      <div class="stat-info">
+        <span class="stat-label">ENFANTS LIBRES</span>
+        <span class="stat-value">{{ stats.enfantsLibres }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau principal -->
+  <div class="main-card">
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn" [class.active]="activeTab === 'parents'" (click)="setTab('parents')">
+        👨‍👩‍👧 Parents <span class="tab-badge">{{ stats.totalParents }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'animatrices'" (click)="setTab('animatrices')">
+        👩‍🏫 Animatrices <span class="tab-badge">{{ stats.totalAnimatrices }}</span>
+      </button>
+    </div>
+
+    <!-- Barre de recherche + tri -->
+    <div class="search-sort-bar">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Rechercher par nom ou email..."
+          [(ngModel)]="searchTerm" />
+      </div>
+      <select class="sort-select" [(ngModel)]="sortOrder">
+        <option value="nom_asc">Nom (A → Z)</option>
+        <option value="nom_desc">Nom (Z → A)</option>
+        <option value="email_asc">Email (A → Z)</option>
+      </select>
+    </div>
+
+    <!-- Liste Parents -->
+    <div *ngIf="activeTab === 'parents'">
+      <div *ngIf="filteredParents.length === 0" class="empty-state">
+        <i class="bi bi-people"></i>
+        <p>Aucun parent trouvé.</p>
+      </div>
+      <div class="user-card" *ngFor="let parent of filteredParents">
+        <div class="user-avatar parents-avatar"><i class="bi bi-people-fill"></i></div>
+        <div class="user-info">
+          <span class="user-name">
+            {{ parent.prenom }} {{ parent.nom }}
+            <span class="enfants-badge" *ngIf="parent.enfants_count !== undefined">
+              {{ parent.enfants_count }} enfant{{ parent.enfants_count > 1 ? 's' : '' }}
+            </span>
+          </span>
+          <span class="user-email">{{ parent.email }}</span>
+        </div>
+        <div class="user-actions">
+          <button class="btn-action btn-details" (click)="ouvrirDetails(parent)">
+            <i class="bi bi-eye"></i> Détails
+          </button>
+          <button class="btn-action btn-modifier" (click)="ouvrirModifier(parent)">
+            <i class="bi bi-pencil"></i> Modifier
+          </button>
+          <button class="btn-action btn-mdp" (click)="ouvrirMotDePasse(parent)">
+            <i class="bi bi-key"></i> Mot de passe
+          </button>
+          <button class="btn-action btn-supprimer" (click)="ouvrirSupprimer(parent)">
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste Animatrices -->
+    <div *ngIf="activeTab === 'animatrices'">
+      <div *ngIf="filteredAnimatrices.length === 0" class="empty-state">
+        <i class="bi bi-mortarboard"></i>
+        <p>Aucune animatrice trouvée.</p>
+      </div>
+      <div class="user-card" *ngFor="let animatrice of filteredAnimatrices">
+        <div class="user-avatar animatrices-avatar"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="user-info">
+          <span class="user-name">
+            {{ animatrice.prenom }} {{ animatrice.nom }}
+            <span class="classe-badge" *ngIf="animatrice.classe">{{ animatrice.classe }}</span>
+          </span>
+          <span class="user-email">{{ animatrice.email }}</span>
+        </div>
+        <div class="user-actions">
+          <button class="btn-action btn-details" (click)="ouvrirDetails(animatrice)">
+            <i class="bi bi-eye"></i> Détails
+          </button>
+          <button class="btn-action btn-modifier" (click)="ouvrirModifier(animatrice)">
+            <i class="bi bi-pencil"></i> Modifier
+          </button>
+          <button class="btn-action btn-mdp" (click)="ouvrirMotDePasse(animatrice)">
+            <i class="bi bi-key"></i> Mot de passe
+          </button>
+          <button class="btn-action btn-supprimer" (click)="ouvrirSupprimer(animatrice)">
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== OVERLAY ===== -->
+<div class="modal-overlay" *ngIf="modalOuvert" (click)="fermerModal()"></div>
+
+<!-- ===== MODAL DÉTAILS ===== -->
+<div class="modal-box" *ngIf="modalOuvert === 'details'">
+  <div class="modal-header">
+    <div>
+      <h3 class="modal-title">Détails du compte</h3>
+      <p class="modal-subtitle">Informations complètes de l'utilisateur.</p>
+    </div>
+    <button class="modal-close" (click)="fermerModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="detail-row">
+      <span class="detail-label">Nom complet</span>
+      <span class="detail-value fw-bold">{{ userSelectionne?.prenom }} {{ userSelectionne?.nom }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="bi bi-envelope"></i> Email</span>
+      <span class="detail-value">{{ userSelectionne?.email }}</span>
+    </div>
+    <div class="detail-row" *ngIf="userSelectionne?.enfants && userSelectionne.enfants.length > 0">
+      <span class="detail-label"><i class="bi bi-emoji-smile"></i> Enfants assignés ({{ userSelectionne.enfants.length }})</span>
+      <div class="detail-value">
+        <div *ngFor="let e of userSelectionne.enfants">• {{ e.prenom }} {{ e.nom }} ({{ e.age }} ans)</div>
+      </div>
+    </div>
+    <div class="detail-row" *ngIf="userSelectionne?.date_creation">
+      <span class="detail-label"><i class="bi bi-calendar"></i> Créé le</span>
+      <span class="detail-value">{{ userSelectionne?.date_creation | date:'yyyy-MM-dd' }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL MODIFIER ===== -->
+<div class="modal-box modal-large" *ngIf="modalOuvert === 'modifier'">
+  <div class="modal-header">
+    <h3 class="modal-title">Modifier le compte</h3>
+    <button class="modal-close" (click)="fermerModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body modal-scroll">
+    <div class="form-group">
+      <label class="form-label">NOM COMPLET</label>
+      <input type="text" class="form-input" [(ngModel)]="formModifier.nom_complet" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">EMAIL</label>
+      <input type="email" class="form-input" [(ngModel)]="formModifier.email" />
+    </div>
+    <div class="form-group" *ngIf="activeTab === 'parents'">
+      <label class="form-label">
+        ENFANTS ASSIGNÉS
+        <span class="form-label-count">{{ enfantsSelectionnes.length }} sélectionné(s)</span>
+      </label>
+      <div class="enfants-search">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Rechercher un enfant..." [(ngModel)]="rechercheEnfant" />
+      </div>
+      <div class="enfants-list">
+        <div class="enfant-option" *ngFor="let enfant of filteredEnfantsDisponibles"
+          [class.selected]="isEnfantSelectionne(enfant)"
+          (click)="toggleEnfant(enfant)">
+          <i class="bi" [class.bi-check-circle-fill]="isEnfantSelectionne(enfant)"
+            [class.bi-circle]="!isEnfantSelectionne(enfant)" style="color:#3a7bd5"></i>
+          <span style="margin:0 8px;font-size:1.2rem">🧒</span>
+          <div class="enfant-info">
+            <span class="enfant-nom">{{ enfant.prenom }} {{ enfant.nom }}</span>
+            <span class="enfant-age">{{ enfant.age }} ans</span>
+          </div>
+          <i class="bi bi-check ms-auto" style="color:#3a7bd5" *ngIf="isEnfantSelectionne(enfant)"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-annuler" (click)="fermerModal()"><i class="bi bi-x"></i> Annuler</button>
+    <button class="btn-confirmer" (click)="sauvegarderModification()"><i class="bi bi-check"></i> Enregistrer</button>
+  </div>
+</div>
+
+<!-- ===== MODAL MOT DE PASSE ===== -->
+<div class="modal-box" *ngIf="modalOuvert === 'mdp'">
+  <div class="modal-header">
+    <div>
+      <h3 class="modal-title">Réinitialiser le mot de passe</h3>
+      <p class="modal-subtitle">Pour <strong>{{ userSelectionne?.prenom }} {{ userSelectionne?.nom }}</strong></p>
+    </div>
+    <button class="modal-close" (click)="fermerModal()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="mdp-toggle">
+      <button class="mdp-toggle-btn" [class.active]="modeMdp === 'auto'" (click)="setModeMdp('auto')">
+        ✦ Automatique
+      </button>
+      <button class="mdp-toggle-btn" [class.active]="modeMdp === 'manuel'" (click)="setModeMdp('manuel')">
+        ✋ Manuel
+      </button>
+    </div>
+    <div *ngIf="modeMdp === 'auto'">
+      <div class="mdp-generated">
+        <span class="mdp-value">{{ nouveauMotDePasse }}</span>
+        <button class="btn-copy" (click)="copierMdp()" [title]="copie ? 'Copié !' : 'Copier'">
+          <i class="bi" [class.bi-clipboard]="!copie" [class.bi-clipboard-check]="copie"></i>
+        </button>
+      </div>
+      <button class="btn-regenerer" (click)="genererMotDePasse()">
+        <i class="bi bi-arrow-clockwise"></i> Générer un autre
+      </button>
+    </div>
+    <div *ngIf="modeMdp === 'manuel'">
+      <div class="form-group">
+        <label class="form-label">NOUVEAU MOT DE PASSE</label>
+        <input type="password" class="form-input" [(ngModel)]="nouveauMotDePasse"
+          placeholder="Entrez un nouveau mot de passe" />
+      </div>
+    </div>
+    <p class="mdp-warning">
+      ⚠️ Copiez et transmettez ce mot de passe en sécurité — il ne sera plus visible après fermeture.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-annuler" (click)="fermerModal()">Annuler</button>
+    <button class="btn-confirmer" (click)="confirmerMotDePasse()">Confirmer</button>
+  </div>
+</div>
+
+<!-- ===== MODAL SUPPRIMER ===== -->
+<div class="modal-box modal-small" *ngIf="modalOuvert === 'supprimer'">
+  <div class="modal-body" style="padding: 32px 28px 20px;">
+    <h3 class="modal-title">Supprimer ce compte ?</h3>
+    <p style="color:#6c757d; margin-top:12px; font-size:0.95rem;">
+      Cette action est irréversible. Le compte de
+      <strong>{{ userSelectionne?.prenom }} {{ userSelectionne?.nom }}</strong>
+      sera définitivement supprimé.
+    </p>
+  </div>
+  <div class="modal-footer" style="border-top:none; padding-top:0;">
+    <button class="btn-annuler" (click)="fermerModal()">Annuler</button>
+    <button class="btn-supprimer-confirm" (click)="confirmerSuppression()">Supprimer</button>
+  </div>
+</div>

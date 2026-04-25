@@ -2,14 +2,15 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from config import settings
 from openai import OpenAI
+import httpx
+
+# Create custom HTTP client without proxies
+http_client = httpx.Client()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=settings.openrouter_api_key,
-    default_headers={
-        "HTTP-Referer": "http://localhost:8000",
-        "X-Title": "FastAPI Chatbot"
-    }
+    http_client=http_client
 )
 
 router = APIRouter()

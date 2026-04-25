@@ -1,8 +1,7 @@
-from sys import prefix
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard,chatbot
+from routes import auth, users, classes, enfants, evenements, notifications, journal, dashboard, chatbot
 
 Base.metadata.create_all(bind=engine)
 
