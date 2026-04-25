@@ -62,10 +62,20 @@ def update_evenement(evenement_id: int,data: EvenementUpdate,db: Session = Depen
     return event
 
 @router.delete("/{evenement_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_evenement(evenement_id: int,db: Session = Depends(get_db),current_user: User = Depends(require_role("directrice"))):
-    event = db.query(Evenement).filter(Evenement.id == evenement_id).first()
-    if not event:
+def delete_evenement(
+    evenement_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("directrice"))
+):
+    evenement = db.query(Evenement).filter(Evenement.id == evenement_id).first()
+    if not evenement:
         raise HTTPException(status_code=404, detail="Événement introuvable")
 
-    db.delete(event)
+    # ✅ Supprimer les participations liées AVANT de supprimer l'événement
+    from models.participation import EventParticipation
+    db.query(EventParticipation).filter(
+        EventParticipation.event_id == evenement_id
+    ).delete(synchronize_session=False)
+
+    db.delete(evenement)
     db.commit()

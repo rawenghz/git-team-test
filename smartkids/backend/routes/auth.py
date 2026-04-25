@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
+from passlib.exc import UnknownHashError
+import hashlib
+import string
 
 from dependencies import get_db,get_current_user
 from models.user import User
@@ -21,7 +24,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    if not hashed:
+        return False
+    try:
+        return pwd_context.verify(plain, hashed)
+    except (UnknownHashError, ValueError):
+        # Legacy SHA256 hex hashes from SQL seed data (SHA2('password', 256)).
+        if len(hashed) == 64 and all(c in string.hexdigits for c in hashed):
+            return hashlib.sha256(plain.encode('utf-8')).hexdigest() == hashed.lower()
+        return False
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -37,13 +48,21 @@ def authenticate_user(email: str, password: str, db: Session):
     user = db.query(User).filter(User.email == email).first()
     if not user:
         return None
-    if not verify_password(password, user.mot_de_passe):
-        return None
-    return user
+
+    if verify_password(password, user.mot_de_passe):
+        # Migrate legacy SHA256 password hashes to bcrypt on first successful login.
+        if len(user.mot_de_passe) == 64 and all(c in string.hexdigits for c in user.mot_de_passe):
+            user.mot_de_passe = hash_password(password)
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        return user
+
+    return None
 
 @router.post("/login", response_model=TokenResponse)
-def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_db)):
-    user = authenticate_user(form_data.username, form_data.password, db)
+def login(data: LoginRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(data.email, data.mot_de_passe, db)
 
     if not user:
         raise HTTPException(
@@ -64,6 +83,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends
 
 
 @router.post("/login-json", response_model=TokenResponse)
+@router.post("/login-json", response_model=TokenResponse)
+@router.post("/login", response_model=TokenResponse)
 def login_json(data: LoginRequest, db: Session = Depends(get_db)):
 
     user = authenticate_user(data.email, data.mot_de_passe, db)

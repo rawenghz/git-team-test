@@ -17,7 +17,7 @@ export class AuthService {
   currentUser = signal<User | null>(this.loadUser());
 
 login(credentials: LoginRequest): Observable<any> {
-  return this.http.post<any>(`${environment.apiUrl}/auth/login-json`, credentials).pipe(
+  return this.http.post<any>(`${environment.apiUrl}/auth/login`, credentials).pipe(
     tap(res => {
       const token = res.access_token;
       const user = {
