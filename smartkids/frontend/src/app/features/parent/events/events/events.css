@@ -1,1 +1,31 @@
-.min-width-0 { min-width: 0; }
+/* ══ Boutons participation ══ */
+.participation-btn {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  color: #475569;
+}
+
+.participation-btn:hover:not(:disabled) {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #1E293B;
+}
+
+.participation-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* État actif : Participer */
+.participation-btn.active-participe {
+  background: #F0FDF4 !important;
+  border-color: #86EFAC !important;
+  color: #166534 !important;
+}
+
+/* État actif : Décliner */
+.participation-btn.active-decline {
+  background: #FEF2F2 !important;
+  border-color: #FCA5A5 !important;
+  color: #991B1B !important;
+}

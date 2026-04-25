@@ -93,15 +93,14 @@ def update_enfant(
         if not classe or enfant.classe_id != classe.id:
             raise HTTPException(status_code=403, detail="Accès interdit")
 
-    # check parent (باش يكون logical)
     if current_user.role == "parent" and enfant.parent_id != current_user.id:
         raise HTTPException(status_code=403, detail="Accès interdit")
 
-    # 🔥 extract data مرة وحدة
+
     update_data = data.model_dump(exclude_unset=True)
     print("UPDATE DATA:", update_data)
 
-    # ❗ إذا فارغة → ما فما حتى update
+
     if not update_data:
         raise HTTPException(status_code=400, detail="Aucune donnée à mettre à jour")
 

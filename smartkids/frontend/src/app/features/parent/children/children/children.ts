@@ -19,7 +19,7 @@ export class ChildrenComponent implements OnInit {
   ngOnInit() {
     this.svc.getMesEnfants().subscribe({
       next: d => {
-        this.enfants.set(d);
+      this.enfants.set(d);
         this.loading.set(false);
       },
       error: () => this.loading.set(false)

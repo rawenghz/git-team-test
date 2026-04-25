@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { LoginRequest, LoginResponse, User } from '../models/models';
+import { LoginRequest, User } from '../models/models';
 import { environment } from '../../environments/environments';
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +17,7 @@ export class AuthService {
   currentUser = signal<User | null>(this.loadUser());
 
 login(credentials: LoginRequest): Observable<any> {
-  return this.http.post<any>(`${environment.apiUrl}/auth/login-json`, credentials).pipe(
+  return this.http.post<any>(`${environment.apiUrl}/auth/login`, credentials).pipe(
     tap(res => {
       const token = res.access_token;
       const user = {

@@ -6,7 +6,7 @@ import { AuthService } from '../../../core/services/auth';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],//kima FormsModule yaati validation w control ahsen
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -16,7 +16,7 @@ export class LoginComponent {
   private router = inject(Router);
 
   loginForm = this.fb.group({
-    email:        ['', [Validators.required, Validators.email]],
+    email:        ['', [Validators.required, Validators.email]],//maghir formbuilder traslik taaml new FormControl w tzid validators
     mot_de_passe: ['', Validators.required]
   });
 
@@ -45,7 +45,7 @@ export class LoginComponent {
       const role = res.role;
 
       if (role === 'directrice') {
-        this.router.navigate(['/directrice/gerer-classe']);
+        this.router.navigate(['/directrice/dashboard']);
       } else if (role === 'animatrice') {
         this.router.navigate(['/animatrice/dashboard']);
       } else if (role === 'parent') {

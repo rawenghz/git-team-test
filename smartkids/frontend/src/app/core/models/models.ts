@@ -60,7 +60,6 @@ export interface Classe {
 export interface ClasseForm {
   nom: string;
   section: string;
-  animatrice_id: number | null;
 }
 
 // ── Événement ─────────────────────────────────────

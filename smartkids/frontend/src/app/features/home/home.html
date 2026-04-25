@@ -8,9 +8,8 @@
       SmartKids
     </a>
 
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -54,7 +53,7 @@
 
     <div class="d-flex justify-content-center gap-3 flex-wrap mb-5">
       <a href="#contact" class="btn btn-primary sk-btn-pill shadow-sm">Nous contacter</a>
-      <a href="#about"   class="btn btn-outline-secondary sk-btn-pill">En savoir plus</a>
+      <a href="#about" class="btn btn-outline-secondary sk-btn-pill">En savoir plus</a>
     </div>
 
     <!-- Stats -->
@@ -96,15 +95,15 @@
 
     <div class="row g-4">
       @for (s of services; track s.title) {
-        <div class="col-md-6 col-lg-4">
-          <div class="sk-service-card h-100 p-4">
-            <div class="sk-service-icon mb-3">
-              <i class="bi {{ s.icon }} fs-5"></i>
-            </div>
-            <h5 class="fw-bold text-dark mb-2">{{ s.title }}</h5>
-            <p class="text-secondary small mb-0">{{ s.desc }}</p>
+      <div class="col-md-6 col-lg-4">
+        <div class="sk-service-card h-100 p-4">
+          <div class="sk-service-icon mb-3">
+            <i class="bi {{ s.icon }} fs-5"></i>
           </div>
+          <h5 class="fw-bold text-dark mb-2">{{ s.title }}</h5>
+          <p class="text-secondary small mb-0">{{ s.desc }}</p>
         </div>
+      </div>
       }
     </div>
 
@@ -126,13 +125,13 @@
 
     <div class="row g-4 justify-content-center">
       @for (info of infos; track info.label) {
-        <div class="col-md-4 col-sm-6">
-          <div class="sk-info-card text-center p-4 h-100">
-            <i class="bi {{ info.icon }} text-primary fs-2 mb-3 d-block"></i>
-            <h6 class="fw-bold text-dark mb-1">{{ info.label }}</h6>
-            <p class="text-secondary small mb-0">{{ info.value }}</p>
-          </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="sk-info-card text-center p-4 h-100">
+          <i class="bi {{ info.icon }} text-primary fs-2 mb-3 d-block"></i>
+          <h6 class="fw-bold text-dark mb-1">{{ info.label }}</h6>
+          <p class="text-secondary small mb-0">{{ info.value }}</p>
         </div>
+      </div>
       }
     </div>
 

@@ -4,8 +4,7 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("/dashboard")
-def dashboard():
+def _build_dashboard():
 
     with engine.connect() as conn:
 
@@ -70,9 +69,17 @@ def dashboard():
         "taux_absence": {
             "total_absences":        taux_absence["total_absences"]        or 0,
             "total_jours":    taux_absence["total_jours"]    or 0,
-            "taux_pourcentage":      taux_absence["taux_pourcentage"]      or 0.0  
+            "taux_pourcentage":      taux_absence["taux_pourcentage"]      or 0.0
         },
         "taux_absence_par_enfant": [dict(e) for e in taux_par_enfant],
         "derniers_utilisateurs":  [dict(u) for u in users],
         "notifications_recentes": [dict(n) for n in notifs]
     }
+
+@router.get("/dashboard")
+def dashboard():
+    return _build_dashboard()
+
+@router.get("/")
+def dashboard_root():
+    return _build_dashboard()

@@ -51,16 +51,16 @@ export class ClassesComponent implements OnInit {
     });
   }
 
-  form: ClasseForm = { nom: '', section: '', animatrice_id: null };
+  form: ClasseForm = { nom: '', section: '' };
 
   openModal(classe?: Classe) {
     this.errorMessage.set('');
     if (classe) {
       this.editingClasse.set(classe);
-      this.form = { nom: classe.nom, section: classe.section, animatrice_id: classe.animatrice_id ?? null };
+      this.form = { nom: classe.nom, section: classe.section };
     } else {
       this.editingClasse.set(null);
-      this.form = { nom: '', section: '', animatrice_id: null };
+      this.form = { nom: '', section: '' };
     }
     this.showModal.set(true);
   }

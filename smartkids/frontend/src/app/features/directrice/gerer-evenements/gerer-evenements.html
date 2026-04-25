@@ -4,12 +4,9 @@
     <h1 class="fw-bold mb-0" style="font-size:24px;">Gestion des Événements</h1>
     <p class="text-muted mb-0">Gérez les événements de votre établissement</p>
   </div>
-  <button class="btn btn-primary d-flex align-items-center gap-2"
-          (click)="openModal()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2.5">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
+  <button class="btn btn-primary d-flex align-items-center gap-2" (click)="openModal()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
     Nouvel événement
   </button>
@@ -28,110 +25,287 @@
   <div class="text-center py-5">
     <div style="font-size:48px">📅</div>
     <p class="text-muted mt-2">Aucun événement planifié</p>
-    <button class="btn btn-primary" (click)="openModal()">
-      Créer le premier événement
-    </button>
+    <button class="btn btn-primary" (click)="openModal()">Créer le premier événement</button>
   </div>
 }
 
-<!-- ══ GRILLE ══ -->
+<!-- ══ LISTE ══ -->
 @else {
-  <div class="row g-3">
+  <div class="d-flex flex-column gap-3" style="max-width:760px;">
     @for (ev of evenements(); track ev.id) {
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card border-0 rounded-3 h-100"
-             style="box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
-          <div class="card-body p-4">
+      <div class="card border-0 rounded-4" style="box-shadow:0 1px 6px rgba(0,0,0,0.07);">
+        <div class="card-body p-4">
 
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div class="d-flex align-items-center gap-3">
-                <div class="event-icon">📅</div>
+          <!-- Ligne 1 : icône + titre + badge + menu -->
+          <div class="d-flex align-items-start gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                 style="width:44px;height:44px;background:#FFFBEB;color:#F59E0B;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
                 <div>
-                  <h5 class="fw-bold mb-0">{{ ev.titre }}</h5>
-                  <span class="badge rounded-pill mt-1"
+                  <h5 class="fw-bold mb-1" style="font-size:1rem;">{{ ev.titre }}</h5>
+                  @if (ev.description) {
+                    <p class="text-muted mb-2" style="font-size:.83rem;">{{ ev.description }}</p>
+                  }
+                  <div class="d-flex flex-wrap gap-3">
+                    <span class="d-flex align-items-center gap-1 text-secondary" style="font-size:.78rem;font-weight:600;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                      </svg>
+                      {{ ev.date }}
+                    </span>
+                    @if (ev.heure_debut) {
+                      <span class="d-flex align-items-center gap-1 text-secondary" style="font-size:.78rem;font-weight:600;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        {{ truncTime(ev.heure_debut) }}@if(ev.heure_fin){ – {{ truncTime(ev.heure_fin) }}}
+                      </span>
+                    }
+                    @if (ev.lieu) {
+                      <span class="d-flex align-items-center gap-1 text-secondary" style="font-size:.78rem;font-weight:600;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        {{ ev.lieu }}
+                      </span>
+                    }
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge rounded-pill px-3 py-1" style="font-size:.72rem;"
                         [class]="statutBadgeClass(ev.statut)">
                     {{ statutLabel(ev.statut) }}
                   </span>
-                </div>
-              </div>
-              <div class="dropdown">
-                <button class="btn btn-sm btn-light rounded-circle"
-                        data-bs-toggle="dropdown">
-                  <svg width="16" height="16" viewBox="0 0 24 24"
-                       fill="currentColor">
-                    <circle cx="12" cy="5"  r="1.5"/>
-                    <circle cx="12" cy="12" r="1.5"/>
-                    <circle cx="12" cy="19" r="1.5"/>
-                  </svg>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2"
-                            (click)="openModal(ev)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                           stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="dropdown">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
                       </svg>
-                      Modifier
                     </button>
-                  </li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <button class="dropdown-item text-danger d-flex align-items-center gap-2"
-                            (click)="confirmDelete(ev)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                           stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6"/><path d="M14 11v6"/>
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                      Supprimer
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="d-flex flex-column gap-1">
-              <div class="d-flex align-items-center gap-2 p-2 rounded-2"
-                   style="background:#f8f9fa;">
-                <span style="font-size:16px;">🗓️</span>
-                <div>
-                  <div class="small text-muted">Date</div>
-                  <div class="fw-semibold small">{{ ev.date }}</div>
-                </div>
-              </div>
-              @if (ev.lieu) {
-                <div class="d-flex align-items-center gap-2 p-2 rounded-2"
-                     style="background:#f8f9fa;">
-                  <span style="font-size:16px;">📍</span>
-                  <div>
-                    <div class="small text-muted">Lieu</div>
-                    <div class="fw-semibold small">{{ ev.lieu }}</div>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2" (click)="openModal(ev)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                          Modifier
+                        </button>
+                      </li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li>
+                        <button class="dropdown-item text-danger d-flex align-items-center gap-2" (click)="confirmDelete(ev)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                            <path d="M10 11v6"/><path d="M14 11v6"/>
+                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                          </svg>
+                          Supprimer
+                        </button>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              }
-              @if (ev.heure_debut) {
-                <div class="d-flex align-items-center gap-2 p-2 rounded-2"
-                     style="background:#f8f9fa;">
-                  <span style="font-size:16px;">🕐</span>
-                  <div>
-                    <div class="small text-muted">Horaire</div>
-                    <div class="fw-semibold small">
-                      {{ truncTime(ev.heure_debut) }}
-                      @if (ev.heure_fin) { → {{ truncTime(ev.heure_fin) }} }
-                    </div>
-                  </div>
-                </div>
-              }
+              </div>
             </div>
-
           </div>
+
+          <!-- ══ SECTION PARTICIPATION ══ -->
+          @if (ev.stats) {
+            <div class="mt-3 pt-3" style="border-top:1px dashed #e5e7eb;">
+
+              <!-- Barre de progression -->
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="d-flex align-items-center gap-1 text-secondary fw-semibold" style="font-size:.8rem;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                  Taux de participation
+                </span>
+                <span style="font-size:.85rem;font-weight:700;color:#3B82F6;">{{ ev.stats.taux_participation }}%</span>
+              </div>
+              <div class="rounded-pill mb-3" style="height:6px;background:#E5E7EB;overflow:hidden;">
+                <div class="rounded-pill" style="height:100%;background:#3B82F6;transition:width .5s ease;"
+                     [style.width.%]="ev.stats.taux_participation"></div>
+              </div>
+
+              <!-- Badges stats + bouton -->
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="badge rounded-pill d-flex align-items-center gap-1 px-3 py-2"
+                        style="background:#F0FDF4;color:#166534;font-size:.75rem;font-weight:600;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    {{ ev.stats.nb_participe }} participants
+                  </span>
+                  <span class="badge rounded-pill d-flex align-items-center gap-1 px-3 py-2"
+                        style="background:#FEF2F2;color:#991B1B;font-size:.75rem;font-weight:600;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    {{ ev.stats.nb_decline }} décliné
+                  </span>
+                  <span class="badge rounded-pill d-flex align-items-center gap-1 px-3 py-2"
+                        style="background:#FFFBEB;color:#92400E;font-size:.75rem;font-weight:600;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    {{ ev.stats.nb_en_attente }} en attente
+                  </span>
+                  <span class="badge rounded-pill d-flex align-items-center gap-1 px-3 py-2"
+                        style="background:#EFF6FF;color:#1E40AF;font-size:.75rem;font-weight:600;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    {{ ev.stats.taux_reponse }}% ont répondu
+                  </span>
+                </div>
+                <button class="btn btn-sm d-flex align-items-center gap-1 px-3"
+                        style="background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;font-size:.78rem;font-weight:600;border-radius:8px;"
+                        (click)="voirDetails(ev)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  Voir détails
+                </button>
+              </div>
+
+            </div>
+          } @else {
+            <div class="mt-3 pt-3 d-flex align-items-center gap-2" style="border-top:1px dashed #e5e7eb;">
+              <div class="spinner-border spinner-border-sm text-secondary" style="width:14px;height:14px;" role="status"></div>
+              <span class="text-muted" style="font-size:.8rem;">Chargement des statistiques...</span>
+            </div>
+          }
+
         </div>
       </div>
     }
+  </div>
+}
+
+
+<!-- ══ MODAL DÉTAILS PARTICIPATION ══ -->
+@if (showDetailsModal() && eventSelectionne()) {
+  <div class="modal-backdrop-custom" (click)="showDetailsModal.set(false)"></div>
+  <div class="modal-custom">
+    <div class="modal-custom-dialog" style="max-width:560px;">
+      <div class="modal-custom-header">
+        <div>
+          <h5 class="fw-bold mb-0">{{ eventSelectionne()!.titre }}</h5>
+          <p class="text-muted mb-0" style="font-size:.82rem;">Détails de participation</p>
+        </div>
+        <button class="btn-close" (click)="showDetailsModal.set(false)"></button>
+      </div>
+      <div class="modal-custom-body">
+
+        @if (eventSelectionne()!.stats; as s) {
+
+          <!-- Mini stats cards -->
+          <div class="row g-2 mb-4">
+            <div class="col-3">
+              <div class="text-center p-3 rounded-3" style="background:#F0FDF4;">
+                <div class="fw-bold" style="font-size:1.4rem;color:#166534;">{{ s.nb_participe }}</div>
+                <div style="font-size:.72rem;color:#166534;font-weight:600;">Participants</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="text-center p-3 rounded-3" style="background:#FEF2F2;">
+                <div class="fw-bold" style="font-size:1.4rem;color:#991B1B;">{{ s.nb_decline }}</div>
+                <div style="font-size:.72rem;color:#991B1B;font-weight:600;">Déclinés</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="text-center p-3 rounded-3" style="background:#FFFBEB;">
+                <div class="fw-bold" style="font-size:1.4rem;color:#92400E;">{{ s.nb_en_attente }}</div>
+                <div style="font-size:.72rem;color:#92400E;font-weight:600;">En attente</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="text-center p-3 rounded-3" style="background:#EFF6FF;">
+                <div class="fw-bold" style="font-size:1.4rem;color:#1E40AF;">{{ s.taux_reponse }}%</div>
+                <div style="font-size:.72rem;color:#1E40AF;font-weight:600;">Répondu</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Barre globale -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted" style="font-size:.8rem;">Progression globale</span>
+              <span style="font-size:.8rem;font-weight:700;color:#3B82F6;">{{ s.taux_participation }}%</span>
+            </div>
+            <div class="rounded-pill" style="height:8px;background:#E5E7EB;overflow:hidden;">
+              <div class="rounded-pill" style="height:100%;background:linear-gradient(90deg,#3B82F6,#60A5FA);transition:width .5s;"
+                   [style.width.%]="s.taux_participation"></div>
+            </div>
+          </div>
+
+          <!-- Participants confirmés -->
+          @if (s.participants.length > 0) {
+            <div class="mb-3">
+              <p class="fw-semibold mb-2 d-flex align-items-center gap-2" style="font-size:.85rem;color:#166534;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Participants confirmés
+              </p>
+              <div class="d-flex flex-wrap gap-2">
+                @for (p of s.participants; track p.id) {
+                  <span class="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+                        style="background:#F8FAFC;border:1px solid #E2E8F0;font-size:.8rem;">
+                    <span class="d-flex align-items-center justify-content-center rounded-circle fw-bold"
+                          style="width:26px;height:26px;background:#DBEAFE;color:#1D4ED8;font-size:.7rem;">
+                      {{ initiales(p) }}
+                    </span>
+                    {{ p.prenom }} {{ p.nom }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Déclinés -->
+          @if (s.declines.length > 0) {
+            <div class="mb-3">
+              <p class="fw-semibold mb-2 d-flex align-items-center gap-2" style="font-size:.85rem;color:#991B1B;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Ont décliné
+              </p>
+              <div class="d-flex flex-wrap gap-2">
+                @for (p of s.declines; track p.id) {
+                  <span class="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+                        style="background:#F8FAFC;border:1px solid #E2E8F0;font-size:.8rem;">
+                    <span class="d-flex align-items-center justify-content-center rounded-circle fw-bold"
+                          style="width:26px;height:26px;background:#FEE2E2;color:#991B1B;font-size:.7rem;">
+                      {{ initiales(p) }}
+                    </span>
+                    {{ p.prenom }} {{ p.nom }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+        }
+      </div>
+      <div class="modal-custom-footer">
+        <button class="btn btn-light" (click)="showDetailsModal.set(false)">Fermer</button>
+      </div>
+    </div>
   </div>
 }
 
@@ -141,29 +315,19 @@
   <div class="modal-backdrop-custom" (click)="closeModal()"></div>
   <div class="modal-custom">
     <div class="modal-custom-dialog" style="max-width:540px;">
-
       <div class="modal-custom-header">
         <h5 class="fw-bold mb-0">{{ modalTitre }}</h5>
         <button class="btn-close" (click)="closeModal()"></button>
       </div>
-
       <div class="modal-custom-body">
         <div class="mb-3">
-          <label class="form-label fw-semibold">
-            Titre <span class="text-danger">*</span>
-          </label>
-          <input type="text" class="form-control"
-                 [(ngModel)]="form.titre"
-                 placeholder="Ex : Fête de fin d'année">
+          <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="form.titre" placeholder="Ex : Fête de fin d'année">
         </div>
-
         <div class="mb-3">
-          <label class="form-label fw-semibold">
-            Date <span class="text-danger">*</span>
-          </label>
+          <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
           <input type="date" class="form-control" [(ngModel)]="form.date">
         </div>
-
         <div class="row g-3 mb-3">
           <div class="col-6">
             <label class="form-label fw-semibold">Heure début</label>
@@ -174,14 +338,10 @@
             <input type="time" class="form-control" [(ngModel)]="form.heure_fin">
           </div>
         </div>
-
         <div class="mb-3">
           <label class="form-label fw-semibold">Lieu</label>
-          <input type="text" class="form-control"
-                 [(ngModel)]="form.lieu"
-                 placeholder="Ex : Salle polyvalente">
+          <input type="text" class="form-control" [(ngModel)]="form.lieu" placeholder="Ex : Salle polyvalente">
         </div>
-
         <div class="mb-3">
           <label class="form-label fw-semibold">Statut</label>
           <select class="form-select" [(ngModel)]="form.statut">
@@ -190,40 +350,26 @@
             <option value="termine">Terminé</option>
           </select>
         </div>
-
         <div class="mb-1">
           <label class="form-label fw-semibold">Description</label>
-          <textarea class="form-control" rows="3"
-                    [(ngModel)]="form.description"
-                    placeholder="Détails de l'événement..."></textarea>
+          <textarea class="form-control" rows="3" [(ngModel)]="form.description" placeholder="Détails de l'événement..."></textarea>
         </div>
       </div>
-
       @if (errorMessage()) {
-        <div class="alert alert-danger d-flex align-items-center gap-2
-                    py-2 mx-4 mb-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2 mx-4 mb-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
           {{ errorMessage() }}
         </div>
       }
-
       <div class="modal-custom-footer">
         <button class="btn btn-light" (click)="closeModal()">Annuler</button>
-        <button class="btn btn-primary"
-                (click)="saveEvenement()"
-                [disabled]="!form.titre || !form.date || saving()">
-          @if (saving()) {
-            <span class="spinner-border spinner-border-sm me-2"></span>
-          }
+        <button class="btn btn-primary" (click)="saveEvenement()" [disabled]="!form.titre || !form.date || saving()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
           {{ editingEvenement() ? 'Enregistrer' : 'Créer' }}
         </button>
       </div>
-
     </div>
   </div>
 }
@@ -231,31 +377,20 @@
 
 <!-- ══ MODAL SUPPRESSION ══ -->
 @if (showDeleteModal()) {
-  <div class="modal-backdrop-custom"
-       (click)="showDeleteModal.set(false)"></div>
+  <div class="modal-backdrop-custom" (click)="showDeleteModal.set(false)"></div>
   <div class="modal-custom">
     <div class="modal-custom-dialog" style="max-width:420px;">
       <div class="modal-custom-header">
         <h5 class="fw-bold mb-0 text-danger">Supprimer l'événement</h5>
-        <button class="btn-close"
-                (click)="showDeleteModal.set(false)"></button>
+        <button class="btn-close" (click)="showDeleteModal.set(false)"></button>
       </div>
       <div class="modal-custom-body">
-        <p class="mb-0">
-          Êtes-vous sûr de vouloir supprimer
-          <strong>{{ evenementToDelete()?.titre }}</strong> ?
-          Cette action est irréversible.
-        </p>
+        <p class="mb-0">Êtes-vous sûr de vouloir supprimer <strong>{{ evenementToDelete()?.titre }}</strong> ? Cette action est irréversible.</p>
       </div>
       <div class="modal-custom-footer">
-        <button class="btn btn-light"
-                (click)="showDeleteModal.set(false)">Annuler</button>
-        <button class="btn btn-danger"
-                (click)="deleteEvenement()"
-                [disabled]="saving()">
-          @if (saving()) {
-            <span class="spinner-border spinner-border-sm me-2"></span>
-          }
+        <button class="btn btn-light" (click)="showDeleteModal.set(false)">Annuler</button>
+        <button class="btn btn-danger" (click)="deleteEvenement()" [disabled]="saving()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-2"></span> }
           Supprimer
         </button>
       </div>

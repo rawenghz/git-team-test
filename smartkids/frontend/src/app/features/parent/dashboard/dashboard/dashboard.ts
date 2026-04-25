@@ -44,9 +44,9 @@ interface DashboardData {
 export class DashboardComponent implements OnInit {
   private svc = inject(DashboardService);
 
-  dashboard        = signal<DashboardData | null>(null);
-  loading          = signal(true);
-  selectedEnfantId = signal<number | null>(null);
+  dashboard  = signal<DashboardData | null>(null);
+  loading= signal(true);
+  selectedEnfantId= signal<number | null>(null);
 
   selectedEnfant = computed(() =>
     this.dashboard()?.enfants.find(e => e.id === this.selectedEnfantId()) ?? null
